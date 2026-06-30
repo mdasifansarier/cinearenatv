@@ -1,48 +1,267 @@
-// src/contexts/PlayerContext.jsx
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+// src/contexts/DataContext.jsx
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
-const PlayerContext = createContext();
+const DataContext = createContext();
 
-export const PLAYER_TYPES = {
-  SHAKA: 'shaka',
-  PLYR: 'plyr',
-  CLAPPR: 'clappr'
+// External JSON URLs
+const DATA_URLS = {
+  movies: 'https://raw.githubusercontent.com/ghosttv620/Ghost-Movie/main/Ghost%20Movie.json',
+  livetv: 'https://cinearenatv.vercel.app/data/livtv.json',
+  sports: 'https://cinearenatv.vercel.app/data/sports.json'
 };
 
-export const PlayerProvider = ({ children }) => {
-  const [selectedPlayer, setSelectedPlayer] = useState(() => {
-    const saved = localStorage.getItem('cinearena_selected_player');
-    return saved || PLAYER_TYPES.PLYR;
+// Fallback data
+const FALLBACK_DATA = {
+  movie: [],
+  livetv: [],
+  sports: [],
+  adult: []
+};
+
+export const DataProvider = ({ children }) => {
+  const [globalData, setGlobalData] = useState({
+    movie: [],
+    livetv: [],
+    sports: [],
+    adult: []
   });
+  const [favorites, setFavorites] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    localStorage.setItem('cinearena_selected_player', selectedPlayer);
-  }, [selectedPlayer]);
-
-  const setPlayer = useCallback((playerType) => {
-    if (Object.values(PLAYER_TYPES).includes(playerType)) {
-      setSelectedPlayer(playerType);
+  const loadFavorites = useCallback(() => {
+    const saved = localStorage.getItem('cinearena_favorites');
+    if (saved) {
+      try {
+        setFavorites(JSON.parse(saved));
+      } catch {
+        setFavorites([]);
+      }
     }
   }, []);
 
-  const getPlayer = useCallback(() => selectedPlayer, [selectedPlayer]);
+  const saveFavorites = useCallback((newFavorites) => {
+    setFavorites(newFavorites);
+    localStorage.setItem('cinearena_favorites', JSON.stringify(newFavorites));
+  }, []);
+
+  const toggleFavorite = useCallback((movie) => {
+    const movieId = movie.m3u8 || movie.mpdLink || movie.link || movie.id;
+    const exists = favorites.some(f => (f.m3u8 || f.mpdLink || f.link || f.id) === movieId);
+    let newFavorites;
+    if (exists) {
+      newFavorites = favorites.filter(f => (f.m3u8 || f.mpdLink || f.link || f.id) !== movieId);
+    } else {
+      newFavorites = [...favorites, movie];
+    }
+    saveFavorites(newFavorites);
+    return !exists;
+  }, [favorites, saveFavorites]);
+
+  const isFavorite = useCallback((movie) => {
+    const movieId = movie.m3u8 || movie.mpdLink || movie.link || movie.id;
+    return favorites.some(f => (f.m3u8 || f.mpdLink || f.link || f.id) === movieId);
+  }, [favorites]);
+
+  const getLogo = useCallback((movie) => {
+    if (movie.logo) return movie.logo;
+    if (movie.image) return movie.image;
+    if (movie.poster) return movie.poster;
+    return 'https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg';
+  }, []);
+
+  // Fetch data from external JSON
+  const fetchData = useCallback(async (url, type) => {
+    try {
+      console.log(`🔍 Fetching ${type} data from:`, url);
+      
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(`✅ ${type} data fetched:`, data);
+
+      // Handle the data format - expects { categories: [...] }
+      let categories = [];
+      
+      if (data && data.categories) {
+        categories = data.categories;
+      } else if (Array.isArray(data)) {
+        categories = data;
+      } else if (data && typeof data === 'object') {
+        const keys = Object.keys(data);
+        for (const key of keys) {
+          if (Array.isArray(data[key]) && data[key].length > 0) {
+            if (data[key][0].movies || data[key][0].name) {
+              categories = data[key];
+              break;
+            }
+          }
+        }
+      }
+
+      // Ensure each movie has proper fields
+      categories = categories.map(category => ({
+        ...category,
+        movies: (category.movies || []).map(movie => ({
+          ...movie,
+          link: movie.link || movie.m3u8 || movie.mpdLink || '',
+          logo: movie.logo || movie.image || movie.poster || 'https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg',
+          m3u8: movie.m3u8 || '',
+          mpdLink: movie.mpdLink || '',
+          premium: movie.premium !== undefined ? movie.premium : null,
+          quality: movie.quality || (movie.premium === true ? 'HD' : movie.premium === false ? 'SD' : null)
+        }))
+      }));
+
+      return categories;
+
+    } catch (error) {
+      console.error(`❌ Error fetching ${type}:`, error);
+      return [];
+    }
+  }, []);
+
+  // Load all data
+  const loadData = useCallback(async (forceRefresh = false) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Fetch all data in parallel
+      const [movieData, livetvData, sportsData] = await Promise.all([
+        fetchData(DATA_URLS.movies, 'movie'),
+        fetchData(DATA_URLS.livetv, 'livetv'),
+        fetchData(DATA_URLS.sports, 'sports')
+      ]);
+
+      console.log('📦 Movie Data Length:', movieData.length);
+      console.log('📦 LiveTV Data Length:', livetvData.length);
+      console.log('📦 Sports Data Length:', sportsData.length);
+
+      const newData = {
+        movie: movieData.length > 0 ? movieData : [],
+        livetv: livetvData.length > 0 ? livetvData : [],
+        sports: sportsData.length > 0 ? sportsData : [],
+        adult: []
+      };
+
+      console.log('📊 Final Global Data:', newData);
+
+      setGlobalData(newData);
+      loadFavorites();
+      setIsLoading(false);
+
+    } catch (error) {
+      console.error('❌ Error loading data:', error);
+      setError(error.message || 'Failed to load data');
+      setGlobalData({
+        movie: [],
+        livetv: [],
+        sports: [],
+        adult: []
+      });
+      loadFavorites();
+      setIsLoading(false);
+    }
+  }, [fetchData, loadFavorites]);
+
+  // Refresh data manually
+  const refreshData = useCallback(() => {
+    return loadData(true);
+  }, [loadData]);
+
+  // Auto-load on mount
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // Get all movies across all categories
+  const getAllMovies = useCallback(() => {
+    const all = [];
+    ['movie', 'livetv', 'sports', 'adult'].forEach(type => {
+      if (globalData[type]) {
+        globalData[type].forEach(category => {
+          if (category?.movies) {
+            all.push(...category.movies.map(m => ({ ...m, category: category.name, type })));
+          }
+        });
+      }
+    });
+    return all;
+  }, [globalData]);
+
+  // Search movies
+  const searchMovies = useCallback((query) => {
+    if (!query || query.trim() === '') return [];
+    const all = getAllMovies();
+    const lowerQuery = query.toLowerCase().trim();
+    return all.filter(movie => 
+      movie.name?.toLowerCase().includes(lowerQuery) ||
+      movie.category?.toLowerCase().includes(lowerQuery)
+    );
+  }, [getAllMovies]);
+
+  // Get movies by category
+  const getMoviesByCategory = useCallback((category, type) => {
+    const data = globalData[type];
+    if (!data) return [];
+    const found = data.find(cat => cat.name === category || cat.id === category);
+    return found?.movies || [];
+  }, [globalData]);
+
+  // Get count of movies in a category
+  const getMovieCount = useCallback((type = 'all') => {
+    let count = 0;
+    if (type === 'all') {
+      ['movie', 'livetv', 'sports'].forEach(t => {
+        if (globalData[t]) {
+          globalData[t].forEach(category => {
+            if (category?.movies) {
+              count += category.movies.length;
+            }
+          });
+        }
+      });
+    } else if (globalData[type]) {
+      globalData[type].forEach(category => {
+        if (category?.movies) {
+          count += category.movies.length;
+        }
+      });
+    }
+    return count;
+  }, [globalData]);
 
   return (
-    <PlayerContext.Provider value={{
-      selectedPlayer,
-      setPlayer,
-      getPlayer,
-      PLAYER_TYPES
+    <DataContext.Provider value={{
+      globalData,
+      isLoading,
+      error,
+      favorites,
+      toggleFavorite,
+      isFavorite,
+      loadData,
+      refreshData,
+      getAllMovies,
+      searchMovies,
+      getMoviesByCategory,
+      getLogo,
+      getMovieCount,
+      DATA_URLS
     }}>
       {children}
-    </PlayerContext.Provider>
+    </DataContext.Provider>
   );
 };
 
-export const usePlayer = () => {
-  const context = useContext(PlayerContext);
+export const useData = () => {
+  const context = useContext(DataContext);
   if (!context) {
-    throw new Error('usePlayer must be used within a PlayerProvider');
+    throw new Error('useData must be used within a DataProvider');
   }
   return context;
 };
