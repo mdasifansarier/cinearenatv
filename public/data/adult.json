@@ -1,0 +1,23 @@
+{
+  "categories": [
+    {
+      "name": "Adult Content",
+      "movies": [
+        {
+          "name": "Adult 1",
+          "m3u8": "https://example.com/adult1.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+        },
+        {
+          "name": "Adult 2",
+          "m3u8": "https://example.com/adult2.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+        }
+      ]
+    }
+  ]
+}

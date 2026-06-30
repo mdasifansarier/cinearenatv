@@ -1,0 +1,58 @@
+{
+  "categories": [
+    {
+      "name": "News Channels",
+      "movies": [
+        {
+          "name": "CNN International",
+          "m3u8": "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8",
+          "type": "hls",
+          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+        },
+        {
+          "name": "BBC World News",
+          "m3u8": "https://example.com/bbc.m3u8",
+          "type": "hls",
+          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+        },
+        {
+          "name": "Sky News",
+          "m3u8": "https://example.com/sky.m3u8",
+          "type": "hls",
+          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+        }
+      ]
+    },
+    {
+      "name": "Entertainment",
+      "movies": [
+        {
+          "name": "HBO",
+          "m3u8": "https://example.com/hbo.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+        },
+        {
+          "name": "MTV",
+          "m3u8": "https://example.com/mtv.m3u8",
+          "type": "hls",
+          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+        }
+      ]
+    },
+    {
+      "name": "Music",
+      "movies": [
+        {
+          "name": "9XM",
+          "mpdLink": "https://abfjk4haaaaaaaampv6ofhkihi4r6.bia-cf.live.pv-cdn.net/iad-nitro/live/clients/dash/enc/hv0umqrko2/out/v1/9ccf0d5b729a4c88a42de20bbfa0d875/cenc.mpd",
+          "keyId": "0bfd72dcc317a46b442c5eb3f293aac6",
+          "key": "1aca7da5cd5e6246829716334feec5c7",
+          "type": "mpd",
+          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "categories": [
+    {
+      "name": "Hindi Movies",
+      "movies": [
+        {
+          "name": "Zee Cinema HD",
+          "m3u8": "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8",
+          "type": "hls",
+          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+        },
+        {
+          "name": "StarPlus HD",
+          "mpdLink": "https://npo-nl-ams-p30-am5.cdn.streamgate.nl/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODI4NTAxNDYsInVyaSI6IlwvbGl2ZVwvbnBvXC91XzNfNFwvbnBvcGx1c1wvZHJtXC9kYXNoX2NlbmNcL25wby0xXC8wXC8wXC8wXC9ucG8tMS5pc21sIiwidmlld2VyIjoidmlld2VyIiwicmlkIjoiN2FmNjY2MSJ9.duQUETqbOlZDaRwZyqdKtH5iDl2oWPe9auG3gtbpm94/live/npo/u_3_4/npoplus/drm/dash_cenc/npo-1/0/0/0/npo-1.isml/stream.mpd",
+          "keyId": "8d3c85fa30730fdc39efc09de476415f",
+          "key": "8fdccd948bb2cc6d99d5305ccffebcb7",
+          "type": "mpd",
+          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+        },
+        {
+          "name": "Sony HD",
+          "m3u8": "https://example.com/sony.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+        }
+      ]
+    },
+    {
+      "name": "Hollywood Movies",
+      "movies": [
+        {
+          "name": "HBO HD",
+          "m3u8": "https://example.com/hbo.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+        },
+        {
+          "name": "Netflix Originals",
+          "m3u8": "https://example.com/netflix.m3u8",
+          "type": "hls",
+          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+        }
+      ]
+    }
+  ]
+}
