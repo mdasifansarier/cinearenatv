@@ -7,17 +7,17 @@ export default defineConfig({
     port: 5173,
     host: true
   },
-  optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', 'hls.js', 'plyr', 'shaka-player']
-  },
   build: {
+    outDir: 'dist',
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          players: ['hls.js', 'plyr', 'shaka-player']
+          vendor: ['react', 'react-dom', 'react-router-dom']
         }
       }
     }
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom']
   }
 });
