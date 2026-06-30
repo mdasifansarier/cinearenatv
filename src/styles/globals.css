@@ -888,7 +888,6 @@ body {
   max-width: 300px;
 }
 
-/* Player Retry Button */
 .player-retry-btn {
   margin-top: 12px;
   background: #e50914;
@@ -904,92 +903,6 @@ body {
 .player-retry-btn:hover {
   background: #b8070f;
   transform: scale(1.02);
-}
-
-/* ---------- PLYR CUSTOMIZATION ---------- */
-.plyr {
-  height: 100% !important;
-  width: 100% !important;
-  background: #000;
-}
-.plyr__video-wrapper {
-  height: 100% !important;
-  width: 100% !important;
-  background: #000;
-}
-.plyr__video-wrapper video {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important;
-}
-.plyr__controls {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
-  padding: 20px 15px 10px;
-}
-.plyr__control--overlaid {
-  background: rgba(229, 9, 20, 0.9);
-}
-.plyr__control--overlaid:hover {
-  background: #e50914;
-}
-.plyr__progress__played {
-  background: #e50914;
-}
-.plyr__volume input[type="range"] {
-  color: #e50914;
-}
-
-/* ---------- SHAKA CUSTOMIZATION ---------- */
-.shaka-player-container {
-  width: 100%;
-  height: 100%;
-  background: #000;
-}
-.shaka-player-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.shaka-controls-container {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
-}
-.shaka-play-button {
-  background: rgba(229, 9, 20, 0.9);
-}
-.shaka-play-button:hover {
-  background: #e50914;
-}
-.shaka-seek-bar .shaka-seek-bar-played {
-  background: #e50914;
-}
-.shaka-seek-bar .shaka-seek-bar-buffered {
-  background: rgba(229, 9, 20, 0.3);
-}
-
-/* ---------- CLAPPR CUSTOMIZATION ---------- */
-.clappr-player-container {
-  width: 100%;
-  height: 100%;
-  background: #000;
-  min-height: 200px;
-}
-.clappr-player-container .player-container {
-  width: 100%;
-  height: 100%;
-}
-.clappr-player-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.clappr-controls {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
-}
-.clappr-play-button {
-  background: rgba(229, 9, 20, 0.9);
-}
-.clappr-play-button:hover {
-  background: #e50914;
 }
 
 /* ---------- PLAYER SELECTOR ---------- */
@@ -1174,6 +1087,130 @@ body {
   min-height: 44px;
   background: rgba(0, 0, 0, 0.6);
   border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* ---------- CLAPPR/VIDEO.JS FIXES ---------- */
+.video-js {
+  width: 100% !important;
+  height: 100% !important;
+  background: #000 !important;
+}
+
+.video-js .vjs-tech {
+  object-fit: contain !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.video-js .vjs-big-play-button {
+  background-color: rgba(229, 9, 20, 0.8) !important;
+  border-radius: 50% !important;
+  width: 70px !important;
+  height: 70px !important;
+  line-height: 70px !important;
+  margin-left: -35px !important;
+  margin-top: -35px !important;
+  border: 2px solid rgba(255, 255, 255, 0.8) !important;
+}
+
+.video-js .vjs-big-play-button:hover {
+  background-color: #e50914 !important;
+}
+
+.video-js .vjs-progress-control .vjs-progress-holder {
+  background-color: #333 !important;
+}
+
+.video-js .vjs-play-progress {
+  background-color: #e50914 !important;
+}
+
+.video-js .vjs-volume-level {
+  background-color: #e50914 !important;
+}
+
+.video-js .vjs-error-display {
+  background: rgba(0, 0, 0, 0.9) !important;
+}
+
+.video-js .vjs-error-display .vjs-modal-dialog-content {
+  color: #fff !important;
+  font-size: 14px !important;
+  text-align: center !important;
+  padding: 20px !important;
+}
+
+/* ---------- SHAKA PLAYER FIXES ---------- */
+.shaka-video-container {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+  background: #000 !important;
+}
+
+.shaka-video-container video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  background: #000 !important;
+}
+
+.shaka-controls-container {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%) !important;
+}
+
+.shaka-play-button {
+  background: rgba(229, 9, 20, 0.9) !important;
+}
+.shaka-play-button:hover {
+  background: #e50914 !important;
+}
+
+.shaka-seek-bar .shaka-seek-bar-played {
+  background: #e50914 !important;
+}
+.shaka-seek-bar .shaka-seek-bar-buffered {
+  background: rgba(229, 9, 20, 0.3) !important;
+}
+
+/* ---------- PLYR PLAYER FIXES ---------- */
+.plyr {
+  height: 100% !important;
+  width: 100% !important;
+  background: #000 !important;
+}
+
+.plyr__video-wrapper {
+  height: 100% !important;
+  width: 100% !important;
+  background: #000 !important;
+}
+
+.plyr__video-wrapper video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  background: #000 !important;
+}
+
+.plyr__controls {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%) !important;
+  padding: 20px 15px 10px !important;
+}
+
+.plyr__control--overlaid {
+  background: rgba(229, 9, 20, 0.9) !important;
+}
+.plyr__control--overlaid:hover {
+  background: #e50914 !important;
+}
+
+.plyr__progress__played {
+  background: #e50914 !important;
+}
+
+.plyr__volume input[type="range"] {
+  color: #e50914 !important;
 }
 
 /* ---------- TOAST ---------- */
@@ -1484,9 +1521,6 @@ body {
   .player-container {
     min-height: 200px;
   }
-  .clappr-player-container {
-    min-height: 200px;
-  }
   .suggested-section {
     padding: 14px 12px 18px;
   }
@@ -1505,26 +1539,6 @@ body {
   .suggested-header img {
     width: 36px;
     height: 36px;
-  }
-
-  /* Plyr mobile fixes */
-  .plyr {
-    min-height: 200px;
-  }
-  .plyr__controls {
-    padding: 10px 10px 8px;
-  }
-  .plyr__control {
-    padding: 6px;
-  }
-  .plyr__control--overlaid {
-    width: 60px;
-    height: 60px;
-    padding: 0;
-  }
-  .plyr__control--overlaid svg {
-    width: 30px;
-    height: 30px;
   }
 
   /* Player selector mobile fixes */
@@ -1578,6 +1592,32 @@ body {
   .player-retry-btn {
     font-size: 12px;
     padding: 6px 18px;
+  }
+  
+  /* Plyr mobile fixes */
+  .plyr__controls {
+    padding: 10px 10px 8px !important;
+  }
+  .plyr__control {
+    padding: 6px !important;
+  }
+  .plyr__control--overlaid {
+    width: 60px !important;
+    height: 60px !important;
+    padding: 0 !important;
+  }
+  .plyr__control--overlaid svg {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  /* Video.js mobile fixes */
+  .video-js .vjs-big-play-button {
+    width: 60px !important;
+    height: 60px !important;
+    line-height: 60px !important;
+    margin-left: -30px !important;
+    margin-top: -30px !important;
   }
 }
 
@@ -1716,33 +1756,6 @@ body {
   }
 }
 
-/* Clappr player mobile fixes */
-@media (max-width: 768px) {
-  .clappr-controls {
-    font-size: 12px !important;
-  }
-  .clappr-button {
-    padding: 6px !important;
-  }
-  .clappr-seek-bar {
-    height: 3px !important;
-  }
-}
-
-/* Fix for Shaka player on mobile */
-@media (max-width: 768px) {
-  .shaka-controls-container {
-    font-size: 12px !important;
-  }
-  .shaka-play-button {
-    width: 50px !important;
-    height: 50px !important;
-  }
-  .shaka-seek-bar {
-    height: 3px !important;
-  }
-}
-
 /* Ensure video takes full width on mobile */
 @media (max-width: 768px) {
   .video-container {
@@ -1759,54 +1772,33 @@ body {
   }
 }
 
-/* Fix for video container to ensure proper rendering */
-.player-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  background: #000;
-  overflow: hidden;
-}
-
-.player-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  background: #000;
-  display: block;
-}
-
-/* Ensure video element fills container */
-.video-player-wrapper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Fix for Plyr */
-.plyr {
-  height: 100% !important;
-  width: 100% !important;
-  background: #000;
-}
-
-.plyr__video-wrapper {
-  height: 100% !important;
-  width: 100% !important;
-  background: #000;
-}
-
-.plyr__video-wrapper video {
+/* ---------- CLAPPR PLAYER SPECIFIC FIXES ---------- */
+#clapper-player {
   width: 100% !important;
   height: 100% !important;
-  object-fit: contain !important;
 }
 
-/* Show loading overlay when active */
-.player-loading-overlay.active {
-  display: flex !important;
+.vjs-default-skin .vjs-control-bar {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%) !important;
+}
+
+.vjs-default-skin .vjs-big-play-button {
+  background-color: rgba(229, 9, 20, 0.8) !important;
+  border-radius: 50% !important;
+}
+
+.vjs-default-skin .vjs-big-play-button:hover {
+  background-color: #e50914 !important;
+}
+
+/* ---------- CLAPPR ERROR FIX ---------- */
+.vjs-error-display {
+  background: rgba(0, 0, 0, 0.9) !important;
+}
+
+.vjs-error-display .vjs-modal-dialog-content {
+  color: #fff !important;
+  font-size: 14px !important;
+  text-align: center !important;
+  padding: 20px !important;
 }
