@@ -58,7 +58,7 @@ const Poster = ({ movie, isFavorite, onFavoriteToggle, onClick }) => {
 
   // Get quality based on stream or premium status
   const getQuality = () => {
-    // If premium is true, show HD, else show SD
+    // If premium is explicitly set to true
     if (movie.premium === true) {
       return 'HD';
     }
@@ -66,13 +66,20 @@ const Poster = ({ movie, isFavorite, onFavoriteToggle, onClick }) => {
     if (movie.quality) {
       return movie.quality;
     }
-    // Default to SD
-    return 'SD';
+    // If premium is explicitly set to false or null, return null (no badge)
+    if (movie.premium === false || movie.premium === null || movie.premium === undefined) {
+      return null;
+    }
+    // Default to null (no badge)
+    return null;
   };
 
   const quality = getQuality();
-  const isHD = quality === 'HD' || quality === 'FHD' || quality === '4K';
+  const isHD = quality === 'HD' || quality === 'FHD' || quality === '4K' || quality === '1080p' || quality === '720p';
   const qualityColor = isHD ? '#22c55e' : '#60a5fa';
+
+  // Only show quality badge if quality exists
+  const showQualityBadge = quality !== null && quality !== undefined && quality !== '';
 
   return (
     <div 
@@ -85,11 +92,13 @@ const Poster = ({ movie, isFavorite, onFavoriteToggle, onClick }) => {
       onClick={handleClick}
     >
       <div className="poster-image-wrapper">
-        {/* Quality Badge - Replaces premium badge */}
-        <span className="quality-badge" style={{ backgroundColor: qualityColor }}>
-          <i className={`fas ${isHD ? 'fa-hdmi' : 'fa-video'}`}></i>
-          {quality}
-        </span>
+        {/* Quality Badge - Only show if quality exists */}
+        {showQualityBadge && (
+          <span className="quality-badge" style={{ backgroundColor: qualityColor }}>
+            <i className={`fas ${isHD ? 'fa-hdmi' : 'fa-video'}`}></i>
+            {quality}
+          </span>
+        )}
         
         {isFavorite && (
           <span className="fav-heart-badge">
