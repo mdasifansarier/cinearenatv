@@ -4,8 +4,8 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 const PlayerContext = createContext();
 
 export const PLAYER_TYPES = {
-  SHAKA: 'shaka',
   PLYR: 'plyr',
+  SHAKA: 'shaka',
   CLAPPR: 'clappr'
 };
 
