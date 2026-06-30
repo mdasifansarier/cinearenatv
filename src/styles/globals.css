@@ -704,7 +704,7 @@ body {
   transform: scale(1.15);
 }
 
-/* ---------- VIDEO MODAL - REFERENCE IMAGE STYLE ---------- */
+/* ---------- VIDEO MODAL ---------- */
 .video-modal {
   display: none;
   position: fixed;
@@ -793,6 +793,7 @@ body {
   position: relative;
   flex-shrink: 0;
   min-height: 200px;
+  overflow: hidden;
 }
 
 /* ---------- VIDEO PLAYER ---------- */
@@ -801,6 +802,9 @@ body {
   height: 100%;
   position: relative;
   background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .player-container {
@@ -808,6 +812,7 @@ body {
   height: 100%;
   position: relative;
   background: #000;
+  overflow: hidden;
 }
 
 .player-container video {
@@ -815,6 +820,7 @@ body {
   height: 100%;
   object-fit: contain;
   background: #000;
+  display: block;
 }
 
 /* ---------- PLAYER LOADING ---------- */
@@ -823,7 +829,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: flex !important;
+  display: none !important;
   flex-direction: column;
   align-items: center;
   gap: 12px;
@@ -833,6 +839,10 @@ body {
   border-radius: 12px;
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.player-loading-overlay.active {
+  display: flex !important;
 }
 
 .player-loading-spinner {
@@ -898,12 +908,19 @@ body {
 
 /* ---------- PLYR CUSTOMIZATION ---------- */
 .plyr {
-  height: 100%;
-  width: 100%;
+  height: 100% !important;
+  width: 100% !important;
   background: #000;
 }
 .plyr__video-wrapper {
+  height: 100% !important;
+  width: 100% !important;
   background: #000;
+}
+.plyr__video-wrapper video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
 }
 .plyr__controls {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
@@ -1087,7 +1104,7 @@ body {
   animation: pulse-dot 1.5s infinite;
 }
 
-/* ---------- SUGGESTED SECTION - REFERENCE IMAGE STYLE ---------- */
+/* ---------- SUGGESTED SECTION ---------- */
 .suggested-section {
   width: 100%;
   background: #0b0f17;
@@ -1742,12 +1759,54 @@ body {
   }
 }
 
-/* ---------- HIDE LOADING OVERLAY WHEN NOT NEEDED ---------- */
-.player-loading-overlay {
-  display: none !important;
+/* Fix for video container to ensure proper rendering */
+.player-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: #000;
+  overflow: hidden;
 }
 
-/* Show loading overlay when loading */
-.video-player-wrapper.loading .player-loading-overlay {
+.player-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  display: block;
+}
+
+/* Ensure video element fills container */
+.video-player-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Fix for Plyr */
+.plyr {
+  height: 100% !important;
+  width: 100% !important;
+  background: #000;
+}
+
+.plyr__video-wrapper {
+  height: 100% !important;
+  width: 100% !important;
+  background: #000;
+}
+
+.plyr__video-wrapper video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+/* Show loading overlay when active */
+.player-loading-overlay.active {
   display: flex !important;
 }
