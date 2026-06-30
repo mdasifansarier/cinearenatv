@@ -17,13 +17,13 @@ const VideoPlayer = ({ movie }) => {
   }, []);
 
   const getSource = () => {
-    if (movie?.m3u8) return { url: movie.m3u8, type: 'hls' };
-    if (movie?.mpdLink) return { url: movie.mpdLink, type: 'mpd', keyId: movie.keyId, key: movie.key };
-    if (movie?.link) return { url: movie.link, type: 'mp4' };
+    if (movie?.m3u8) return movie.m3u8;
+    if (movie?.mpdLink) return movie.mpdLink;
+    if (movie?.link) return movie.link;
     return null;
   };
 
-  const source = getSource();
+  const videoUrl = getSource();
 
   const cleanup = () => {
     if (containerRef.current) {
@@ -66,7 +66,7 @@ const VideoPlayer = ({ movie }) => {
   };
 
   useEffect(() => {
-    if (!source || !containerRef.current) {
+    if (!videoUrl || !containerRef.current) {
       setIsLoading(false);
       return;
     }
@@ -96,9 +96,9 @@ const VideoPlayer = ({ movie }) => {
     return () => {
       cleanup();
     };
-  }, [source, selectedPlayer]);
+  }, [videoUrl, selectedPlayer]);
 
-  // ============ PLYR PLAYER - Supports MP4, HLS, and MPD ============
+  // ============ PLYR PLAYER WITH QUALITY SELECTOR + MP4 SUPPORT ============
   const initPlyr = async () => {
     try {
       await loadCSS('https://cdn.plyr.io/3.7.8/plyr.css');
@@ -124,17 +124,23 @@ const VideoPlayer = ({ movie }) => {
       videoEl.setAttribute('autoplay', 'yes');
       videoEl.setAttribute('controls', 'true');
       videoEl.setAttribute('playsinline', 'true');
-      videoEl.setAttribute('preload', 'metadata');
       videoEl.style.width = '100%';
       videoEl.style.height = '100%';
       videoEl.style.objectFit = 'contain';
       videoEl.style.backgroundColor = '#000';
       containerRef.current.appendChild(videoEl);
 
-      // Check stream type and handle accordingly
-      if (source.type === 'mp4') {
+      // Check if it's an MP4 file (by extension or if HLS fails)
+      const isMp4 = videoUrl && (
+        videoUrl.toLowerCase().includes('.mp4') || 
+        videoUrl.toLowerCase().includes('.webm') ||
+        videoUrl.toLowerCase().includes('.mkv') ||
+        !videoUrl.toLowerCase().includes('.m3u8')
+      );
+
+      if (isMp4) {
         // MP4 - Direct playback
-        videoEl.src = source.url;
+        videoEl.src = videoUrl;
         
         const player = new Plyr(videoEl, {
           controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen'],
@@ -150,10 +156,10 @@ const VideoPlayer = ({ movie }) => {
           videoEl.muted = false;
         }).catch(() => {});
 
-      } else if (source.type === 'hls' && Hls && Hls.isSupported()) {
+      } else if (Hls && Hls.isSupported()) {
         // HLS - Use HLS.js
         const hls = new Hls();
-        hls.loadSource(source.url);
+        hls.loadSource(videoUrl);
         hls.attachMedia(videoEl);
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -204,54 +210,31 @@ const VideoPlayer = ({ movie }) => {
         hls.on(Hls.Events.ERROR, (event, data) => {
           if (data.fatal) {
             console.error('HLS error:', data);
-            if (isMounted.current) {
-              setPlayerError('Stream error');
-              setIsLoading(false);
+            // Try direct playback as fallback
+            try {
+              videoEl.src = videoUrl;
+              const player = new Plyr(videoEl, {
+                controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen']
+              });
+              if (isMounted.current) {
+                setIsLoading(false);
+              }
+              videoEl.muted = true;
+              videoEl.play().then(() => {
+                videoEl.muted = false;
+              }).catch(() => {});
+            } catch (e) {
+              if (isMounted.current) {
+                setPlayerError('Stream error');
+                setIsLoading(false);
+              }
             }
           }
         });
 
-      } else if (source.type === 'mpd') {
-        // MPD/DASH - Try native playback or fallback
-        try {
-          // Try to play MPD directly (some browsers support it)
-          videoEl.src = source.url;
-          
-          const player = new Plyr(videoEl, {
-            controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen'],
-            settings: ['speed']
-          });
-          
-          if (isMounted.current) {
-            setIsLoading(false);
-          }
-          
-          videoEl.muted = true;
-          videoEl.play().then(() => {
-            videoEl.muted = false;
-          }).catch(() => {
-            // If MPD fails, try Shaka as fallback
-            if (isMounted.current) {
-              setPlayerError('MPD stream not supported in Plyr, switching to Shaka...');
-              setTimeout(() => {
-                initShaka();
-              }, 500);
-            }
-          });
-        } catch (error) {
-          console.error('MPD playback error:', error);
-          // Fallback to Shaka
-          if (isMounted.current) {
-            setPlayerError('MPD stream not supported in Plyr, switching to Shaka...');
-            setTimeout(() => {
-              initShaka();
-            }, 500);
-          }
-        }
-
       } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
         // Native HLS for Safari
-        videoEl.src = source.url;
+        videoEl.src = videoUrl;
         const player = new Plyr(videoEl, {
           controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen'],
           settings: ['quality', 'speed']
@@ -264,7 +247,18 @@ const VideoPlayer = ({ movie }) => {
           videoEl.muted = false;
         }).catch(() => {});
       } else {
-        throw new Error('Stream format not supported');
+        // Fallback: Try direct playback
+        videoEl.src = videoUrl;
+        const player = new Plyr(videoEl, {
+          controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen']
+        });
+        if (isMounted.current) {
+          setIsLoading(false);
+        }
+        videoEl.muted = true;
+        videoEl.play().then(() => {
+          videoEl.muted = false;
+        }).catch(() => {});
       }
 
     } catch (error) {
@@ -273,10 +267,13 @@ const VideoPlayer = ({ movie }) => {
     }
   };
 
-  // ============ CLAPPR PLAYER ============
+  // ============ CLAPPR PLAYER - FIXED VERSION ============
   const initClappr = async () => {
     try {
+      // Load Clappr from CDN
       await loadScript('https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js');
+      
+      // Load HLS.js playback plugin
       await loadScript('https://cdn.jsdelivr.net/npm/@clappr/hlsjs-playback@1.2.0/dist/hlsjs-playback.min.js');
 
       await new Promise(resolve => {
@@ -293,6 +290,7 @@ const VideoPlayer = ({ movie }) => {
       const Clappr = window.Clappr;
       const HlsjsPlayback = window.HlsjsPlayback;
 
+      // Clear container
       if (containerRef.current) {
         containerRef.current.innerHTML = '';
       }
@@ -308,11 +306,8 @@ const VideoPlayer = ({ movie }) => {
         plugins.push(HlsjsPlayback);
       }
 
-      // Determine source type for Clappr
-      let clapprSource = source.url;
-      
       const player = new Clappr.Player({
-        source: clapprSource,
+        source: videoUrl,
         parentId: '#clappr-player-container',
         autoPlay: true,
         autoPlayVisible: 'partial',
@@ -334,6 +329,7 @@ const VideoPlayer = ({ movie }) => {
         setIsLoading(false);
       }
 
+      // Unmute after autoplay
       setTimeout(() => {
         if (player) {
           player.setVolume(100);
@@ -354,7 +350,7 @@ const VideoPlayer = ({ movie }) => {
     }
   };
 
-  // ============ SHAKA PLAYER - Supports MP4, HLS, MPD ============
+  // ============ SHAKA PLAYER ============
   const initShaka = async () => {
     try {
       await loadScript('https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js');
@@ -390,25 +386,22 @@ const VideoPlayer = ({ movie }) => {
 
       const player = new shaka.Player(videoEl);
       
-      // Configure DRM if needed (for MPD streams)
-      if (source.keyId && source.key) {
+      if (movie?.keyId && movie?.key) {
         player.configure({
           drm: {
             clearKeys: {
-              [source.keyId]: source.key
+              [movie.keyId]: movie.key
             }
           }
         });
       }
 
-      // Setup UI overlay
       const ui = new shaka.ui.Overlay(player, containerRef.current, videoEl);
       ui.configure({
         controlPanelElements: ['play_pause', 'mute', 'volume', 'time_and_duration', 'spacer', 'quality', 'fullscreen']
       });
 
-      // Load the stream
-      await player.load(source.url);
+      await player.load(videoUrl);
       
       if (isMounted.current) {
         setIsLoading(false);
@@ -421,36 +414,7 @@ const VideoPlayer = ({ movie }) => {
 
     } catch (error) {
       console.error('Shaka init error:', error);
-      // Fallback to direct video for MP4
-      if (source.type === 'mp4') {
-        try {
-          const videoEl = document.createElement('video');
-          videoEl.className = 'w-full h-full';
-          videoEl.setAttribute('autoplay', 'true');
-          videoEl.setAttribute('controls', 'true');
-          videoEl.setAttribute('playsinline', 'true');
-          videoEl.style.width = '100%';
-          videoEl.style.height = '100%';
-          videoEl.style.objectFit = 'contain';
-          videoEl.style.backgroundColor = '#000';
-          videoEl.src = source.url;
-          containerRef.current.innerHTML = '';
-          containerRef.current.appendChild(videoEl);
-          
-          if (isMounted.current) {
-            setIsLoading(false);
-          }
-          
-          videoEl.muted = true;
-          videoEl.play().then(() => {
-            videoEl.muted = false;
-          }).catch(() => {});
-        } catch (e) {
-          throw error;
-        }
-      } else {
-        throw error;
-      }
+      throw error;
     }
   };
 
@@ -458,7 +422,7 @@ const VideoPlayer = ({ movie }) => {
   useEffect(() => {
     const handlePlayerChange = () => {
       cleanup();
-      if (source) {
+      if (videoUrl) {
         setTimeout(() => {
           const initializePlayer = async () => {
             try {
@@ -482,29 +446,15 @@ const VideoPlayer = ({ movie }) => {
     return () => {
       window.removeEventListener('playerChanged', handlePlayerChange);
     };
-  }, [source, selectedPlayer]);
-
-  // Get player display name
-  const getPlayerDisplayName = () => {
-    if (selectedPlayer === PLAYER_TYPES.SHAKA) return 'Shaka';
-    if (selectedPlayer === PLAYER_TYPES.CLAPPR) return 'Clappr';
-    return 'Plyr';
-  };
+  }, [videoUrl, selectedPlayer]);
 
   return (
     <div className="video-player-wrapper">
       <PlayerSelector />
-      {source && (
-        <div className="player-stream-info">
-          <span className="stream-type">{source.type.toUpperCase()}</span>
-          <span className="player-name">{getPlayerDisplayName()}</span>
-          <span className="player-status">● Live</span>
-        </div>
-      )}
       {isLoading && (
         <div className="player-loading-overlay active">
           <div className="player-loading-spinner"></div>
-          <span>Loading {getPlayerDisplayName()} player...</span>
+          <span>Loading {selectedPlayer.toUpperCase()}...</span>
         </div>
       )}
       {playerError && (
