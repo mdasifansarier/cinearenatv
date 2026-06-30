@@ -1928,20 +1928,3 @@ body {
   transform: scale(1.02);
 }
 
-/* Page Header */
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 0 4px;
-}
-
-.movie-count {
-  font-size: 14px;
-  color: #94a3b8;
-  background: rgba(148, 163, 184, 0.1);
-  padding: 4px 14px;
-  border-radius: 20px;
-  border: 1px solid rgba(148, 163, 184, 0.15);
-}
