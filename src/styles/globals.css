@@ -1883,3 +1883,65 @@ body {
   border-radius: 3px;
   letter-spacing: 0.3px;
 }
+
+
+/* Refresh Button Small */
+.refresh-btn-small {
+  background: none;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.refresh-btn-small:hover {
+  border-color: #e50914;
+  color: #fff;
+}
+.refresh-btn-small .fa-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Retry Button */
+.retry-btn {
+  margin-top: 16px;
+  background: #e50914;
+  color: #fff;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.retry-btn:hover {
+  background: #b8070f;
+  transform: scale(1.02);
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 4px;
+}
+
+.movie-count {
+  font-size: 14px;
+  color: #94a3b8;
+  background: rgba(148, 163, 184, 0.1);
+  padding: 4px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+}
