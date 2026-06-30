@@ -1,56 +1,544 @@
 {
   "categories": [
     {
-      "name": "News Channels",
+      "name": "Hindi Tv",
       "movies": [
         {
-          "name": "CNN International",
-          "m3u8": "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8",
-          "type": "hls",
-          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
-        },
-        {
-          "name": "BBC World News",
-          "m3u8": "https://example.com/bbc.m3u8",
-          "type": "hls",
-          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
-        },
-        {
-          "name": "Sky News",
-          "m3u8": "https://example.com/sky.m3u8",
-          "type": "hls",
-          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
-        }
-      ]
-    },
-    {
-      "name": "Entertainment",
-      "movies": [
-        {
-          "name": "HBO",
-          "m3u8": "https://example.com/hbo.m3u8",
+          "name": "Zee Cinema HD",
+          "m3u8": "https://sm-monirul.top/toffee/play/zee_cinema_hd.m3u8",
           "type": "hls",
           "premium": true,
-          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+          "logo": "https://i.ibb.co.com/bgXKkV1p/20260627-221115.webp"
         },
         {
-          "name": "MTV",
-          "m3u8": "https://example.com/mtv.m3u8",
+          "name": "StarPlus HD",
+          "m3u8": "https://trs1.aynaott.com/starplushd/index.m3u8",
           "type": "hls",
-          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+          "premium": true,
+          "logo": "https://i.ibb.co.com/sQSMs0p/20260625-111623.webp"
+        },
+        {
+          "name": "Travelxp",
+          "m3u8": "https://travelxp-travelxp-1-eu.rakuten.wurl.tv/3000.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/gF6XzHkK/20260623-122943.webp"
+        },
+        {
+          "name": "Dangal",
+          "m3u8": "https://live-dangal2.akamaized.net/liveabr/pub-iodanga2a26kj2/live_240p/chunks.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/bR2SVTD0/20260623-125341.webp"
+        },
+        {
+          "name": "shemaroo Josh",
+          "m3u8": "https://airtelapp.shemaroo.com/shemarooChumbakTV/smil:shemarooChumbakTVadp.smil/chunklist_b1628000_sleng.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/fzgBfLBj/20260623-130338.webp"
         }
       ]
     },
     {
-      "name": "Music",
+      "name": "Hits Music",
       "movies": [
         {
+          "name": "Zoom",
+          "m3u8": "https://dai.google.com/linear/hls/event/JCAm25qkRXiKcK1AJMlvKQ/master.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/5X9wbJXH/20260625-111121.webp"
+        },
+        {
+          "name": "ZB Music",
+          "m3u8": "https://server.zillarbarta.com/zbmusic/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/LDHZ1mJw/20260625-110821.webp"
+        },
+        {
+          "name": "Vaanavil TV",
+          "m3u8": "https://6n3yope4d9ok-hls-live.5centscdn.com/vaanavil/TV.stream/playlist.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/wZzfpt5n/20260625-110545.webp"
+        },
+        {
+          "name": "Ultimate TV",
+          "m3u8": "https://stream.ottlive.co.in/utvtamil/index.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/SwNKCtcx/20260625-110348.webp"
+        },
+        {
+          "name": "Tunes 6",
+          "m3u8": "https://stream.d6-pro.com/tunes6music/live/video.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/7N8LpzQt/20260625-110217.webp"
+        },
+        {
+          "name": "Steelbird Music",
+          "m3u8": "https://cdn2.in/SteelbirdMusicTVhls/live.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/k6sDn4jn/20260625-105854.webp"
+        },
+        {
+          "name": "Sangeet Marathi",
+          "m3u8": "https://cdn-3.pishow.tv/live/1229/master.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/SXwxktbM/20260625-105552.webp"
+        },
+        {
+          "name": "Sana Plus",
+          "m3u8": "https://mumbai-edge.smartplaytv.in/SanaPlusHD/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/hxRx1Zyc/20260625-105135.webp"
+        },
+        {
+          "name": "Punjabi Hits",
+          "m3u8": "https://stream.ottlive.co.in/punjabihits/index.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/Txn219hn/20260625-104555.webp"
+        },
+        {
+          "name": "Ptc Music",
+          "m3u8": "https://d2lk5u59tns74c.cloudfront.net/out/v1/f913cf893c594f73b114216e74a2efbc/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/pBfdBc0C/20260625-103922.webp"
+        },
+        {
           "name": "9XM",
-          "mpdLink": "https://abfjk4haaaaaaaampv6ofhkihi4r6.bia-cf.live.pv-cdn.net/iad-nitro/live/clients/dash/enc/hv0umqrko2/out/v1/9ccf0d5b729a4c88a42de20bbfa0d875/cenc.mpd",
-          "keyId": "0bfd72dcc317a46b442c5eb3f293aac6",
-          "key": "1aca7da5cd5e6246829716334feec5c7",
-          "type": "mpd",
-          "logo": "https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg"
+          "m3u8": "https://9xjio.wiseplayout.com/9XM/master.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/jkS9FfD2/20260625-103314.webp"
+        },
+        {
+          "name": "Saga Haryanvi",
+          "m3u8": "https://amg01412-xiaomiasia-sagamusicharyanvi-xiaomi-0v34j.amagi.tv/playlist/amg01412-xiaomiasia-sagamusicharyanvi-xiaomi/playlist.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/Jj46Dr8P/20260624-212931.webp"
+        },
+        {
+          "name": "Yrf Music",
+          "m3u8": "https://amg01412-xiaomiasia-yrfmusic-xiaomi-1rmk2.amagi.tv/ts-eu-w1-n2/playlist/amg01412-xiaomiasia-yrfmusic-xiaomi/cb573d1e786c678f9bd43d6fcef04382847b3dcb0e6c886470af4a9765d97800dbe8ae84ae5b910c4c9e1fc061017d360439cd1dd56c49c1da63b820743c4b21fdcde00080dd0d0cb1df11292ca36265299a7369cc350f7bd2ec5a2f803ebe764c53cb017c593f88f258a9734cc59e0a957f39e8fc8b307b24455a9c5a43e6a64cb7a9b30846d13df5e0014a957e14fa83439fd501b385865883438422a716c895f2dad1148be4ef598d6f77a02022405fbdc213b1c853b1d69b6d3c8f795a297437c790e335caa1e43d277debf6cac505b5739cc84d290146e935c8054de3dd4bd31b4d0fca325a8dff082b18b7cd5a2e03a8e4ab8bc1f852d769d6adf3d47f7098b94136178925ef2b253c9fead854aaf755c7e66dd5ef292a31cec711c0ddaad5bbf9cd6b8c35c6c2c39d3f6947774b57d50aecc93b9b61f6509ce33f6d1c414da69f15e383da553f2b0fa5884cdb1e1ef68adfd6915e759a2e4b1adb61df5a176583613f2bab7eafe84906e311038b3132ec4b75d1128edf02c1e78ab5486bcf9dad24d860e0b206d78c728a652e560fb6b2611f724573d4e1711e721ee740f7d8deee670363bda39a1ea19bfcbb9471df2d11bc632dc24e2570a8eeb9ce62ec/147/854x480_1724104/index.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/DgP79XG8/20260623-132544.webp"
+        },
+        {
+          "name": "Baraza Music",
+          "m3u8": "https://eco.streams.ovh:8081/barazatv/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/1G6B8zMp/20260623-132133.webp"
+        },
+        {
+          "name": "Balle Music",
+          "m3u8": "https://mcncdndigital.com/balleballetv/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/4gZ3Ppsn/20260623-131700.webp"
+        },
+        {
+          "name": "B4u Music",
+          "m3u8": "https://cdn-2.pishow.tv/live/415/master.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/hRzxmY1S/20260623-131346.webp"
+        },
+        {
+          "name": "Bizo Music",
+          "m3u8": "https://fl.biztv.media/music_720_QAKpGmVUjaPApCNjpsgBxrdqNihAkl/tracks-v1a1/mono.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/hFwdP17m/20260623-131007.webp"
+        },
+        {
+          "name": "9x Jalwa",
+          "m3u8": "https://wiselp.wiseplayout.com/9X_Jalwa/master.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/pv8Sb1jB/20260623-124952.webp"
+        },
+        {
+          "name": "Music India",
+          "m3u8": "https://cdn-2.pishow.tv/live/226/master.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/rKzXdqY4/20260623-124419.webp"
+        },
+        {
+          "name": "Channel S",
+          "m3u8": "https://app.ncare.live/live-orgin/channels.stream/playlist.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/1t7HWqcc/20260623-094405.webp"
+        },
+        {
+          "name": "Sangit Bangla",
+          "m3u8": "https://cdn-4.pishow.tv/live/1143/master.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/sv3M5wk7/20260623-022938.webp"
+        },
+        {
+          "name": "Joo Music",
+          "m3u8": "https://livecdn.live247stream.com/joomusic/tv/playlist.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/tpJZQRyg/20260622-195020.webp"
+        }
+      ]
+    },
+    {
+      "name": "Kolkata Bangla",
+      "movies": [
+        {
+          "name": "Z বাংলা সোনার",
+          "m3u8": "https://sm-monirul.top/toffee/play/zee_bangla_cinema.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/WJn4QnB/20260627-220728.webp"
+        },
+        {
+          "name": "Zee Bangla",
+          "m3u8": "https://sm-monirul.top/toffee/play/zee_bangla.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/LXfZz6x9/20260627-220135.webp"
+        },
+        {
+          "name": "Sony  আট",
+          "m3u8": "https://sm-monirul.top/toffee/play/sonyaath.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/HL9b8Rhc/20260627-114730.webp"
+        },
+        {
+          "name": "Aamar Bangla",
+          "m3u8": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI/amarbanglatv.stream/playlist.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/0yVc14SY/20260625-111943.webp"
+        },
+        {
+          "name": "Zee 24 Ghanta",
+          "m3u8": "https://d2dsoyvkr33m05.cloudfront.net/index_1.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/gLyNHp93/20260624-204551.webp"
+        },
+        {
+          "name": "R Bangla",
+          "m3u8": "https://amg01218-republictvfast-amg01218c1-samsung-in-1918.playouts.now.amagi.tv/playlist/amg01218-republictvfast-rbangla-samsungin/playlist.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/RkMfpFr6/20260624-082529.webp"
+        },
+        {
+          "name": "Tv9 Bangla",
+          "m3u8": "https://dyjmyiv3bp2ez.cloudfront.net/pub-iotv9banaen8yq/liveabr/playlist.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/k2nsQH9B/20260624-082121.webp"
+        },
+        {
+          "name": "Rongeen Tv",
+          "m3u8": "https://server.thelegitpro.in/rongeentv/rongeentv/tracks-v1a1/mono.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/prLVwx1q/20260624-081737.webp"
+        },
+        {
+          "name": "Calcutta News",
+          "m3u8": "https://akdnetwork.co.in/live/cnnew/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/jPH6w1mr/20260624-081421.webp"
+        },
+        {
+          "name": "Banglajago",
+          "m3u8": "http://banglajagotv.livebox.co.in:80/banglajagohls/24x7.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/Hpx5WNty/20260624-080659.webp"
+        },
+        {
+          "name": "Akash Aath",
+          "m3u8": "https://live.thebosstv.com:30443/dwlive/AAKAASH-AATH/chunks.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/KzBK1BTz/20260623-125817.webp"
+        },
+        {
+          "name": "Star Jalsha",
+          "m3u8": "https://tvsen4.aynaott.com/n64PH4YL/index.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/Kx9q1q1w/20260622-195635.webp"
+        },
+        {
+          "name": "Enter 10",
+          "m3u8": "https://live-bangla.akamaized.net/liveabr/pub-iobanglakp3sff/live_720p/chunks.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/xtmM79Yz/20260622-193452.webp"
+        }
+      ]
+    },
+    {
+      "name": "Sports Tv",
+      "movies": [
+        {
+          "name": "Toffee Fifa",
+          "m3u8": "https://pub-098b280041274cf5929f5e19cfc8ac67.r2.dev/en/index.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/23JnTXt7/20260625-020533.webp"
+        },
+        {
+          "name": "FIFA 2026",
+          "m3u8": "https://1nyaler.streamhostingcdn.top/stream/33/index.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/jdBTJW7/20260624-210243.webp"
+        },
+        {
+          "name": "CCTV",
+          "m3u8": "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/VpCTKKPN/20260623-011131.webp"
+        },
+        {
+          "name": "Tsports",
+          "m3u8": "https://tv.emnetbd.com/flussonic/Tsports1/tracks-v1a1/mono.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/Xmn5JpS/20260618-022013.webp"
+        },
+        {
+          "name": "Fox Five",
+          "m3u8": "https://1nyaler.streamhostingcdn.top/stream/32/index.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/dqyg4KF/20260622-161213.webp"
+        },
+        {
+          "name": "Somoy Tv",
+          "m3u8": "https://mhbdtv.top/api/stream-proxy?url=http%3A%2F%2Frgkkw.live%3A80%2Flive%2F1Aoen7elp5%2FIgMJ60tmAa%2F130714.ts",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/7w2rF08/20260618-034915.webp"
+        }
+      ]
+    },
+    {
+      "name": "Bangla Tv",
+      "movies": [
+        {
+          "name": "Rtv",
+          "m3u8": "https://app24.jagobd.com.bd/c3VydmVyX8RpbEU9Mi8xNy8yMFDEEHGcfRgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcEdsEfeDeKiNkVN3PTOmdFseWRtaW51aiPhnPTI2/rtv-sg.stream/tracks-v1a1/mono.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/Xfk2jByM/20260628-020324.webp"
+        },
+        {
+          "name": "Green Tv",
+          "m3u8": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/greentv.stream/live-orgin/greentv.stream/playlist.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/G4KZ9yqD/20260628-020003.webp"
+        },
+        {
+          "name": "Channel 1 TV",
+          "m3u8": "https://app24.jagobd.com.bd/c3VydmVyX8RpbEU9Mi8xNy8yMFDEEHGcfRgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcEdsEfeDeKiNkVN3PTOmdFseWRtaW51aiPhnPTI2/channel1bd.stream/tracks-v1a1/mono.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/TqBtZRyF/20260628-015213.webp"
+        },
+        {
+          "name": "Boishakhi TV",
+          "m3u8": "https://boishakhi.sonarbanglatv.com/boishakhi/boishakhitv/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/5WKbrF5K/20260628-014516.webp"
+        },
+        {
+          "name": "Gtv",
+          "m3u8": "https://app24.jagobd.com.bd/c3VydmVyX8RpbEU9Mi8xNy8yMFDEEHGcfRgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcEdsEfeDeKiNkVN3PTOmdFseWRtaW51aiPhnPTI2/gazibdz.stream/tracks-v1a1/mono.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/FL36ryZ6/20260628-014100.webp"
+        },
+        {
+          "name": "Etv",
+          "m3u8": "http://live.ekushey-tv.com/hls-live/livepkgr/_definst_/liveevent/livestream3.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/Ldrk3ps4/20260624-080955.webp"
+        },
+        {
+          "name": "Rajdhani Tv",
+          "m3u8": "https://stream.shariarsuvo.com/hls5/rajdhanicable.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/kVgtBGvK/20260623-021406.webp"
+        },
+        {
+          "name": "Mohona Tv",
+          "m3u8": "https://app24.jagobd.com.bd/c3VydmVyX8RpbEU9Mi8xNy8yMFDEEHGcfRgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcEdsEfeDeKiNkVN3PTOmdFseWRtaW51aiPhnPTI2/mohonatv.stream/tracks-v1a1/mono.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/RkrGYt9j/20260623-020811.webp"
+        },
+        {
+          "name": "Bijoy Tv",
+          "m3u8": "https://stream.ottplus.live/live/bijoy_tv_abr/live/bijoy_tv_720/chunks.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/zWxGvCcG/20260623-020438.webp"
+        },
+        {
+          "name": "Global Tv",
+          "m3u8": "https://app24.jagobd.com.bd/c3VydmVyX8RpbEU9Mi8xNy8yMFDEEHGcfRgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcEdsEfeDeKiNkVN3PTOmdFseWRtaW51aiPhnPTI2/Global-tv.stream/tracks-v1a1/mono.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/jk75sJ9b/20260623-015954.webp"
+        },
+        {
+          "name": "Bangla Tv",
+          "m3u8": "https://stream.ottplus.live/live/bangla_tv_hd_abr/live/bangla_tv_hd_720/chunks.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/V0MJDLmq/20260623-015601.webp"
+        },
+        {
+          "name": "Ananda Tv",
+          "m3u8": "https://app24.jagobd.com.bd/c3VydmVyX8RpbEU9Mi8xNy8yMFDEEHGcfRgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcEdsEfeDeKiNkVN3PTOmdFseWRtaW51aiPhnPTI2/anandatv.stream/tracks-v1a1/mono.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/Q7G44Gp0/20260623-015129.webp"
+        },
+        {
+          "name": "Channel 9",
+          "m3u8": "https://owrcovcrpy.gpcdn.net/bpk-tv/1729/output/index.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/h1fLjJp3/20260623-013624.webp"
+        },
+        {
+          "name": "Bangla +",
+          "m3u8": "https://live-stream.utkalbongo.com/hls/livebanglatvstream.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/jvfMvpZL/20260622-192950.webp"
+        },
+        {
+          "name": "Somoy Tv",
+          "m3u8": "https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/7w2rF08/20260618-034915.webp"
+        },
+        {
+          "name": "Movie Bangla",
+          "m3u8": "https://sm-monirul.top/toffee/play/movie_bangla.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/rGCQ14yK/20260618-021225.webp"
+        }
+      ]
+    },
+    {
+      "name": "Akash Go",
+      "movies": [
+        {
+          "name": "Deepto Tv",
+          "m3u8": "https://owrcovcrpy.gpcdn.net/bpk-tv/1711/output/index.m3u8",
+          "type": "hls",
+          "premium": true,
+          "hidden": true,
+          "logo": "https://i.ibb.co.com/JR3C1b9S/20260617-201703.webp"
+        },
+        {
+          "name": "Bangla Vision",
+          "m3u8": "https://owrcovcrpy.gpcdn.net/bpk-tv/1715/output/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/RkWGwGnZ/20260617-205020.webp"
+        },
+        {
+          "name": "Btv",
+          "m3u8": "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/CXvtPYN/20260617-205448.webp"
+        },
+        {
+          "name": "Ntv",
+          "m3u8": "https://owrcovcrpy.gpcdn.net/bpk-tv/1716/output/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/JwgFgzNJ/20260617-205910.webp"
+        },
+        {
+          "name": "Machranga Tv",
+          "m3u8": "https://owrcovcrpy.gpcdn.net/bpk-tv/1722/output/index.m3u8",
+          "type": "hls",
+          "premium": true,
+          "logo": "https://i.ibb.co.com/5gnpRDyh/20260617-210143.webp"
+        },
+        {
+          "name": "Channel i",
+          "m3u8": "https://owrcovcrpy.gpcdn.net/bpk-tv/1723/output/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/Z65V70K2/20260617-210738.webp"
+        },
+        {
+          "name": "Jamuna Tv",
+          "m3u8": "https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/238JNcWJ/20260617-211002.webp"
+        },
+        {
+          "name": "Atn News",
+          "m3u8": "https://owrcovcrpy.gpcdn.net/bpk-tv/1706/output/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/sdmHvmtC/20260617-211356.webp"
+        },
+        {
+          "name": "Channel 24",
+          "m3u8": "https://owrcovcrpy.gpcdn.net/bpk-tv/1703/output/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/pj8SJRw5/20260617-211657.webp"
+        },
+        {
+          "name": "Ekattor Tv",
+          "m3u8": "https://owrcovcrpy.gpcdn.net/bpk-tv/1705/output/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/qYfZzpXb/20260617-211924.webp"
+        },
+        {
+          "name": "Independent",
+          "m3u8": "https://owrcovcrpy.gpcdn.net/bpk-tv/1704/output/index.m3u8",
+          "type": "hls",
+          "premium": false,
+          "logo": "https://i.ibb.co.com/tp63qbFv/20260617-212423.webp"
         }
       ]
     }
