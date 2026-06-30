@@ -1845,3 +1845,14 @@ body {
     height: 3px !important;
   }
 }
+
+/* Player name in stream info */
+.player-stream-info .player-name {
+  font-size: 9px;
+  font-weight: 700;
+  color: #e50914;
+  background: rgba(229, 9, 20, 0.15);
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+}
