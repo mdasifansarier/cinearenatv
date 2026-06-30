@@ -4,15 +4,15 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 const PlayerContext = createContext();
 
 export const PLAYER_TYPES = {
-  CLAPPR: 'clappr',
+  PLYR: 'plyr',
   SHAKA: 'shaka',
-  PLYR: 'plyr'
+  CLAPPR: 'clappr'
 };
 
 export const PlayerProvider = ({ children }) => {
   const [selectedPlayer, setSelectedPlayer] = useState(() => {
     const saved = localStorage.getItem('cinearena_selected_player');
-    return saved || PLAYER_TYPES.PLYR;
+    return saved || PLAYER_TYPES.PLYR; // Default to Plyr
   });
 
   useEffect(() => {
