@@ -4,7 +4,7 @@ import { usePlayer, PLAYER_TYPES } from '../contexts/PlayerContext';
 import PlayerSelector from './PlayerSelector';
 
 const VideoPlayer = ({ movie }) => {
-  const { selectedPlayer } = usePlayer();
+  const { selectedPlayer, setPlayer } = usePlayer();
   const containerRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
   const [playerError, setPlayerError] = useState(null);
@@ -17,13 +17,35 @@ const VideoPlayer = ({ movie }) => {
   }, []);
 
   const getSource = () => {
-    if (movie?.m3u8) return movie.m3u8;
-    if (movie?.mpdLink) return movie.mpdLink;
-    if (movie?.link) return movie.link;
+    if (movie?.m3u8) return { url: movie.m3u8, type: 'hls' };
+    if (movie?.mpdLink) return { url: movie.mpdLink, type: 'mpd', keyId: movie.keyId, key: movie.key };
+    if (movie?.link) return { url: movie.link, type: 'hls' };
     return null;
   };
 
-  const videoUrl = getSource();
+  const source = getSource();
+
+  // Auto-detect player based on stream type
+  const getDefaultPlayer = () => {
+    if (source?.type === 'mpd') {
+      return PLAYER_TYPES.SHAKA;
+    } else if (source?.type === 'hls') {
+      return PLAYER_TYPES.PLYR;
+    }
+    return PLAYER_TYPES.PLYR;
+  };
+
+  // Use selected player or auto-detect based on stream type
+  const effectivePlayer = selectedPlayer || getDefaultPlayer();
+
+  // If stream type is MPD and user hasn't selected a player, default to Shaka
+  useEffect(() => {
+    if (source?.type === 'mpd' && !localStorage.getItem('cinearena_selected_player')) {
+      setPlayer(PLAYER_TYPES.SHAKA);
+    } else if (source?.type === 'hls' && !localStorage.getItem('cinearena_selected_player')) {
+      setPlayer(PLAYER_TYPES.PLYR);
+    }
+  }, [source, setPlayer]);
 
   const cleanup = () => {
     if (containerRef.current) {
@@ -66,7 +88,7 @@ const VideoPlayer = ({ movie }) => {
   };
 
   useEffect(() => {
-    if (!videoUrl || !containerRef.current) {
+    if (!source || !containerRef.current) {
       setIsLoading(false);
       return;
     }
@@ -75,9 +97,9 @@ const VideoPlayer = ({ movie }) => {
 
     const initializePlayer = async () => {
       try {
-        if (selectedPlayer === PLAYER_TYPES.CLAPPR) {
+        if (effectivePlayer === PLAYER_TYPES.CLAPPR) {
           await initClappr();
-        } else if (selectedPlayer === PLAYER_TYPES.SHAKA) {
+        } else if (effectivePlayer === PLAYER_TYPES.SHAKA) {
           await initShaka();
         } else {
           await initPlyr();
@@ -96,9 +118,9 @@ const VideoPlayer = ({ movie }) => {
     return () => {
       cleanup();
     };
-  }, [videoUrl, selectedPlayer]);
+  }, [source, effectivePlayer]);
 
-  // ============ PLYR PLAYER WITH QUALITY SELECTOR ============
+  // ============ PLYR PLAYER (Default for HLS) ============
   const initPlyr = async () => {
     try {
       await loadCSS('https://cdn.plyr.io/3.7.8/plyr.css');
@@ -130,13 +152,12 @@ const VideoPlayer = ({ movie }) => {
       videoEl.style.backgroundColor = '#000';
       containerRef.current.appendChild(videoEl);
 
-      if (Hls && Hls.isSupported()) {
+      if (source.type === 'hls' && Hls && Hls.isSupported()) {
         const hls = new Hls();
-        hls.loadSource(videoUrl);
+        hls.loadSource(source.url);
         hls.attachMedia(videoEl);
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          // Get available qualities
           const availableQualities = hls.levels
             .map(level => level.height)
             .filter(Boolean)
@@ -185,14 +206,14 @@ const VideoPlayer = ({ movie }) => {
           if (data.fatal) {
             console.error('HLS error:', data);
             if (isMounted.current) {
-              setPlayerError('Stream error');
+              setPlayerError('Stream error - Please try again');
               setIsLoading(false);
             }
           }
         });
 
       } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
-        videoEl.src = videoUrl;
+        videoEl.src = source.url;
         const player = new Plyr(videoEl, {
           controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen'],
           settings: ['quality', 'speed']
@@ -205,11 +226,149 @@ const VideoPlayer = ({ movie }) => {
           videoEl.muted = false;
         }).catch(() => {});
       } else {
-        throw new Error('HLS not supported');
+        // Fallback to direct video
+        videoEl.src = source.url;
+        const player = new Plyr(videoEl, {
+          controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen']
+        });
+        if (isMounted.current) {
+          setIsLoading(false);
+        }
+        videoEl.muted = true;
+        videoEl.play().then(() => {
+          videoEl.muted = false;
+        }).catch(() => {});
       }
 
     } catch (error) {
       console.error('Plyr init error:', error);
+      throw error;
+    }
+  };
+
+  // ============ SHAKA PLAYER (Default for DASH/MPD) ============
+  const initShaka = async () => {
+    try {
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js');
+      await loadCSS('https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css');
+
+      await new Promise(resolve => {
+        const checkShaka = () => {
+          if (window.shaka) {
+            resolve();
+          } else {
+            setTimeout(checkShaka, 100);
+          }
+        };
+        checkShaka();
+      });
+
+      const shaka = window.shaka;
+      shaka.polyfill.installAll();
+
+      if (!shaka.Player.isBrowserSupported()) {
+        throw new Error('Shaka not supported');
+      }
+
+      const videoEl = document.createElement('video');
+      videoEl.className = 'w-full h-full';
+      videoEl.setAttribute('autoplay', 'true');
+      videoEl.setAttribute('playsinline', 'true');
+      videoEl.style.width = '100%';
+      videoEl.style.height = '100%';
+      videoEl.style.objectFit = 'contain';
+      videoEl.style.backgroundColor = '#000';
+      containerRef.current.appendChild(videoEl);
+
+      const player = new shaka.Player(videoEl);
+      
+      // Configure DRM if needed (for MPD streams)
+      if (source.keyId && source.key) {
+        player.configure({
+          drm: {
+            clearKeys: {
+              [source.keyId]: source.key
+            }
+          },
+          streaming: {
+            lowLatencyMode: true,
+            bufferingGoal: 15,
+            rebufferingGoal: 2,
+            bufferBehind: 15,
+            retryParameters: {
+              timeout: 10000,
+              maxAttempts: 5,
+              baseDelay: 300,
+              backoffFactor: 1.2
+            },
+            segmentRequestTimeout: 8000,
+            segmentPrefetchLimit: 2,
+            useNativeHlsOnSafari: true
+          },
+          manifest: {
+            retryParameters: { timeout: 8000, maxAttempts: 3 }
+          }
+        });
+      } else {
+        // Default streaming config
+        player.configure({
+          streaming: {
+            lowLatencyMode: true,
+            bufferingGoal: 15,
+            rebufferingGoal: 2,
+            bufferBehind: 15
+          }
+        });
+      }
+
+      // Setup UI overlay
+      const ui = new shaka.ui.Overlay(player, containerRef.current, videoEl);
+      ui.configure({
+        controlPanelElements: [
+          'play_pause', 
+          'mute', 
+          'volume', 
+          'time_and_duration',
+          'spacer', 
+          'language', 
+          'captions', 
+          'picture_in_picture',
+          'quality', 
+          'fullscreen'
+        ],
+        volumeBarColors: {
+          base: 'rgba(135, 206, 235, 0.35)',
+          level: 'rgb(255,255,255)'
+        },
+        seekBarColors: {
+          base: 'rgba(50, 55, 61)',
+          buffered: 'rgba(135, 206, 235, 0.6)',
+          played: 'rgb(255, 255, 255)'
+        }
+      });
+
+      player.addEventListener('error', (event) => {
+        console.error('Shaka Player Error:', event.detail);
+        if (isMounted.current) {
+          setPlayerError('Stream error - Please try again');
+          setIsLoading(false);
+        }
+      });
+
+      await player.load(source.url);
+      
+      if (isMounted.current) {
+        setIsLoading(false);
+      }
+
+      // Force autoplay
+      videoEl.muted = true;
+      videoEl.play().then(() => {
+        videoEl.muted = false;
+      }).catch(() => {});
+
+    } catch (error) {
+      console.error('Shaka init error:', error);
       throw error;
     }
   };
@@ -250,8 +409,8 @@ const VideoPlayer = ({ movie }) => {
         controls: true,
         preload: 'auto',
         sources: [{
-          src: videoUrl,
-          type: 'application/x-mpegURL'
+          src: source.url,
+          type: source.type === 'mpd' ? 'application/dash+xml' : 'application/x-mpegURL'
         }]
       });
 
@@ -275,85 +434,17 @@ const VideoPlayer = ({ movie }) => {
     }
   };
 
-  // ============ SHAKA PLAYER ============
-  const initShaka = async () => {
-    try {
-      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js');
-      await loadCSS('https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css');
-
-      await new Promise(resolve => {
-        const checkShaka = () => {
-          if (window.shaka) {
-            resolve();
-          } else {
-            setTimeout(checkShaka, 100);
-          }
-        };
-        checkShaka();
-      });
-
-      const shaka = window.shaka;
-      shaka.polyfill.installAll();
-
-      if (!shaka.Player.isBrowserSupported()) {
-        throw new Error('Shaka not supported');
-      }
-
-      const videoEl = document.createElement('video');
-      videoEl.className = 'w-full h-full';
-      videoEl.setAttribute('autoplay', 'true');
-      videoEl.setAttribute('playsinline', 'true');
-      videoEl.style.width = '100%';
-      videoEl.style.height = '100%';
-      videoEl.style.objectFit = 'contain';
-      videoEl.style.backgroundColor = '#000';
-      containerRef.current.appendChild(videoEl);
-
-      const player = new shaka.Player(videoEl);
-      
-      if (movie?.keyId && movie?.key) {
-        player.configure({
-          drm: {
-            clearKeys: {
-              [movie.keyId]: movie.key
-            }
-          }
-        });
-      }
-
-      const ui = new shaka.ui.Overlay(player, containerRef.current, videoEl);
-      ui.configure({
-        controlPanelElements: ['play_pause', 'mute', 'volume', 'time_and_duration', 'spacer', 'quality', 'fullscreen']
-      });
-
-      await player.load(videoUrl);
-      
-      if (isMounted.current) {
-        setIsLoading(false);
-      }
-
-      videoEl.muted = true;
-      videoEl.play().then(() => {
-        videoEl.muted = false;
-      }).catch(() => {});
-
-    } catch (error) {
-      console.error('Shaka init error:', error);
-      throw error;
-    }
-  };
-
   // Handle player change
   useEffect(() => {
     const handlePlayerChange = () => {
       cleanup();
-      if (videoUrl) {
+      if (source) {
         setTimeout(() => {
           const initializePlayer = async () => {
             try {
-              if (selectedPlayer === PLAYER_TYPES.CLAPPR) {
+              if (effectivePlayer === PLAYER_TYPES.CLAPPR) {
                 await initClappr();
-              } else if (selectedPlayer === PLAYER_TYPES.SHAKA) {
+              } else if (effectivePlayer === PLAYER_TYPES.SHAKA) {
                 await initShaka();
               } else {
                 await initPlyr();
@@ -371,15 +462,29 @@ const VideoPlayer = ({ movie }) => {
     return () => {
       window.removeEventListener('playerChanged', handlePlayerChange);
     };
-  }, [videoUrl, selectedPlayer]);
+  }, [source, effectivePlayer]);
+
+  // Get player display name
+  const getPlayerDisplayName = () => {
+    if (effectivePlayer === PLAYER_TYPES.SHAKA) return 'Shaka';
+    if (effectivePlayer === PLAYER_TYPES.CLAPPR) return 'Clappr';
+    return 'Plyr';
+  };
 
   return (
     <div className="video-player-wrapper">
       <PlayerSelector />
+      {source && (
+        <div className="player-stream-info">
+          <span className="stream-type">{source.type.toUpperCase()}</span>
+          <span className="player-name">{getPlayerDisplayName()}</span>
+          <span className="player-status">● Live</span>
+        </div>
+      )}
       {isLoading && (
         <div className="player-loading-overlay active">
           <div className="player-loading-spinner"></div>
-          <span>Loading {selectedPlayer.toUpperCase()}...</span>
+          <span>Loading {getPlayerDisplayName()} player...</span>
         </div>
       )}
       {playerError && (
