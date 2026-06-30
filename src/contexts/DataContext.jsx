@@ -5,8 +5,8 @@ const DataContext = createContext();
 
 // External JSON URLs - Replace with your actual URLs
 const DATA_URLS = {
-  movies: 'public/data/movies.json',
-  livetv: 'public/data/livetv.json',
+  movies: 'https://cinearenatv.vercel.app/data/movies.json',
+  livetv: 'https://cinearenatv.vercel.app/data/livtv.json',
   sports: 'public/data/sports.json',
   adult: 'public/data/adult.json'
 };
