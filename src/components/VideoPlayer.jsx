@@ -136,7 +136,6 @@ const VideoPlayer = ({ movie }) => {
         hls.attachMedia(videoEl);
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          // Get available qualities
           const availableQualities = hls.levels
             .map(level => level.height)
             .filter(Boolean)
@@ -214,63 +213,85 @@ const VideoPlayer = ({ movie }) => {
     }
   };
 
-  // ============ CLAPPR PLAYER ============
+  // ============ CLAPPR PLAYER - FIXED VERSION ============
   const initClappr = async () => {
     try {
-      await loadCSS('https://vjs.zencdn.net/8.10.0/video-js.min.css');
-      await loadScript('https://vjs.zencdn.net/8.10.0/video.min.js');
-      await loadScript('https://cdn.jsdelivr.net/npm/hls.js@latest');
-      await loadScript('https://cdn.jsdelivr.net/npm/videojs-contrib-hls@5.15.0/dist/videojs-contrib-hls.min.js');
+      // Load Clappr from CDN
+      await loadScript('https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js');
+      
+      // Load HLS.js playback plugin
+      await loadScript('https://cdn.jsdelivr.net/npm/@clappr/hlsjs-playback@1.2.0/dist/hlsjs-playback.min.js');
 
       await new Promise(resolve => {
-        const checkVideoJs = () => {
-          if (window.videojs) {
+        const checkClappr = () => {
+          if (window.Clappr) {
             resolve();
           } else {
-            setTimeout(checkVideoJs, 100);
+            setTimeout(checkClappr, 100);
           }
         };
-        checkVideoJs();
+        checkClappr();
       });
 
-      const videojs = window.videojs;
+      const Clappr = window.Clappr;
+      const HlsjsPlayback = window.HlsjsPlayback;
 
-      const videoEl = document.createElement('video');
-      videoEl.id = 'clapper-player';
-      videoEl.className = 'video-js vjs-big-play-centered vjs-16-9';
-      videoEl.setAttribute('controls', 'true');
-      videoEl.setAttribute('preload', 'auto');
-      videoEl.setAttribute('playsinline', 'true');
-      videoEl.style.width = '100%';
-      videoEl.style.height = '100%';
-      containerRef.current.appendChild(videoEl);
+      // Clear container
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
+      }
 
-      const player = videojs('clapper-player', {
-        autoplay: true,
-        controls: true,
-        preload: 'auto',
-        sources: [{
-          src: videoUrl,
-          type: 'application/x-mpegURL'
-        }]
-      });
+      const playerDiv = document.createElement('div');
+      playerDiv.id = 'clappr-player-container';
+      playerDiv.style.width = '100%';
+      playerDiv.style.height = '100%';
+      containerRef.current.appendChild(playerDiv);
 
-      player.ready(() => {
-        if (isMounted.current) {
-          setIsLoading(false);
+      const plugins = [];
+      if (HlsjsPlayback) {
+        plugins.push(HlsjsPlayback);
+      }
+
+      const player = new Clappr.Player({
+        source: videoUrl,
+        parentId: '#clappr-player-container',
+        autoPlay: true,
+        autoPlayVisible: 'partial',
+        mute: true,
+        height: '100%',
+        width: '100%',
+        poster: movie?.logo || '',
+        plugins: plugins,
+        playback: {
+          hlsjsConfig: {
+            maxMaxBufferLength: 100,
+            enableWorker: true,
+            lowLatencyMode: true
+          }
         }
-        player.play().catch(() => {});
       });
 
-      player.on('error', () => {
-        if (isMounted.current) {
-          setPlayerError('Failed to play video');
-          setIsLoading(false);
+      if (isMounted.current) {
+        setIsLoading(false);
+      }
+
+      // Unmute after autoplay
+      setTimeout(() => {
+        if (player) {
+          player.setVolume(100);
+          player.setMute(false);
         }
-      });
+      }, 1500);
 
     } catch (error) {
       console.error('Clappr init error:', error);
+      // Fallback to Plyr
+      if (isMounted.current) {
+        setPlayerError('Clappr failed, trying Plyr...');
+        setTimeout(() => {
+          initPlyr();
+        }, 500);
+      }
       throw error;
     }
   };
