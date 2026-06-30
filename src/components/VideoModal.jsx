@@ -13,11 +13,10 @@ const VideoModal = ({ isOpen, movie, onClose }) => {
   useEffect(() => {
     if (movie) {
       setCurrentMovie(movie);
-      setPlayerKey(prev => prev + 1); // Force re-render of VideoPlayer
+      setPlayerKey(prev => prev + 1);
     }
   }, [movie]);
 
-  // Listen for player changes
   useEffect(() => {
     const handlePlayerChanged = () => {
       setPlayerKey(prev => prev + 1);
