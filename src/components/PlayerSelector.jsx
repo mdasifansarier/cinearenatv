@@ -28,7 +28,6 @@ const PlayerSelector = () => {
   const handleSelect = (playerType) => {
     setPlayer(playerType);
     setIsOpen(false);
-    // Dispatch event to reinitialize player
     window.dispatchEvent(new CustomEvent('playerChanged', { detail: { player: playerType } }));
     const showToast = (msg) => {
       window.dispatchEvent(new CustomEvent('showToast', { detail: { message: msg } }));
