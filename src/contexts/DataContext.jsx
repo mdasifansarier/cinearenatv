@@ -5,10 +5,10 @@ const DataContext = createContext();
 
 // External JSON URLs - Replace with your actual URLs
 const DATA_URLS = {
-  movies: '/data/movies.json',
-  livetv: '/data/livetv.json',
-  sports: '/data/sports.json',
-  adult: '/data/adult.json'
+  movies: 'public/data/movies.json',
+  livetv: 'public/data/livetv.json',
+  sports: 'public/data/sports.json',
+  adult: 'public/data/adult.json'
 };
 
 // Fallback data with your exact format
