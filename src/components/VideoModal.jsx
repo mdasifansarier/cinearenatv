@@ -93,10 +93,10 @@ const VideoModal = ({ isOpen, movie, onClose }) => {
       </div>
 
       <div className="video-modal-body">
-        <div className="video-container">
+        <div className="video-container-left">
           <VideoPlayer key={playerKey} movie={currentMovie} />
         </div>
-        <div className="suggested-section">
+        <div className="suggested-section-right">
           <div className="suggested-header">
             <img 
               src={getMovieLogo()} 
@@ -108,7 +108,7 @@ const VideoModal = ({ isOpen, movie, onClose }) => {
             <span>🔥 Watch Next</span>
           </div>
           <div className="suggested-grid">
-            {suggestedMovies.slice(0, 8).map((item, index) => (
+            {suggestedMovies.slice(0, 9).map((item, index) => (
               <div 
                 key={item.m3u8 || item.mpdLink || index}
                 className="suggested-item"
