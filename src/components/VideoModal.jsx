@@ -7,9 +7,29 @@ import { showToast } from './Toast';
 const VideoModal = ({ isOpen, movie, onClose }) => {
   const { globalData } = useData();
   const [suggestedMovies, setSuggestedMovies] = useState([]);
+  const [currentMovie, setCurrentMovie] = useState(movie);
+  const [playerKey, setPlayerKey] = useState(0);
 
   useEffect(() => {
-    if (movie && globalData) {
+    if (movie) {
+      setCurrentMovie(movie);
+      setPlayerKey(prev => prev + 1); // Force re-render of VideoPlayer
+    }
+  }, [movie]);
+
+  // Listen for player changes
+  useEffect(() => {
+    const handlePlayerChanged = () => {
+      setPlayerKey(prev => prev + 1);
+    };
+    window.addEventListener('playerChanged', handlePlayerChanged);
+    return () => {
+      window.removeEventListener('playerChanged', handlePlayerChanged);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (currentMovie && globalData) {
       const allMovies = [];
       ['movie', 'livetv', 'sports'].forEach(type => {
         if (globalData[type]) {
@@ -21,23 +41,23 @@ const VideoModal = ({ isOpen, movie, onClose }) => {
         }
       });
       
-      const currentLink = movie.m3u8 || movie.mpdLink || movie.link;
+      const currentLink = currentMovie.m3u8 || currentMovie.mpdLink || currentMovie.link;
       const filtered = allMovies.filter(m => 
         (m.m3u8 || m.mpdLink || m.link) !== currentLink
       );
       const shuffled = filtered.sort(() => Math.random() - 0.5);
       setSuggestedMovies(shuffled.slice(0, 12));
     }
-  }, [movie, globalData]);
+  }, [currentMovie, globalData]);
 
-  if (!isOpen || !movie) return null;
+  if (!isOpen || !currentMovie) return null;
 
   const handleShare = async () => {
     try {
       if (navigator.share) {
         await navigator.share({
-          title: movie.name,
-          text: `Watch "${movie.name}" on CineArena!`,
+          title: currentMovie.name,
+          text: `Watch "${currentMovie.name}" on CineArena!`,
           url: window.location.href
         });
       } else {
@@ -57,7 +77,7 @@ const VideoModal = ({ isOpen, movie, onClose }) => {
   };
 
   const getMovieLogo = () => {
-    return movie.logo || movie.image || movie.poster || 'https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg';
+    return currentMovie.logo || currentMovie.image || currentMovie.poster || 'https://image.tmdb.org/t/p/original//1CTw5gGz4GrWyCYjPBuf2VdjTsv.jpg';
   };
 
   return (
@@ -67,7 +87,7 @@ const VideoModal = ({ isOpen, movie, onClose }) => {
           <i className="fas fa-arrow-left"></i>
           <span>Back</span>
         </button>
-        <h3 className="video-title">{movie.name || 'Untitled'}</h3>
+        <h3 className="video-title">{currentMovie.name || 'Untitled'}</h3>
         <button className="share-btn" onClick={handleShare}>
           <i className="fas fa-share-alt"></i>
         </button>
@@ -75,7 +95,7 @@ const VideoModal = ({ isOpen, movie, onClose }) => {
 
       <div className="video-modal-body">
         <div className="video-container">
-          <VideoPlayer movie={movie} />
+          <VideoPlayer key={playerKey} movie={currentMovie} />
         </div>
         <div className="suggested-section">
           <div className="suggested-header">
