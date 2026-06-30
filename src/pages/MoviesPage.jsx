@@ -4,19 +4,14 @@ import { useData } from '../contexts/DataContext';
 import Poster from '../components/Poster';
 
 const MoviesPage = ({ onMovieClick }) => {
-  const { globalData, isLoading, loadData, getMovieCount } = useData();
+  const { globalData, isLoading, loadData, getMovieCount, error, refreshData } = useData();
 
   useEffect(() => {
-    console.log('🔄 MoviesPage mounted, loading data...');
-    // Load data if not already loaded
-    if (!globalData.movie || globalData.movie.length === 0) {
+    console.log('🔄 MoviesPage mounted');
+    if (globalData.movie.length === 0) {
       loadData();
     }
   }, []);
-
-  useEffect(() => {
-    console.log('📊 MoviesPage - Global Data Updated:', globalData);
-  }, [globalData]);
 
   if (isLoading) {
     return (
@@ -29,21 +24,19 @@ const MoviesPage = ({ onMovieClick }) => {
 
   const movieCount = getMovieCount('movie');
 
-  console.log('🎬 Movie Categories:', globalData.movie);
-  console.log('🎬 Total Movies:', movieCount);
-
+  // Check if we have data
   if (!globalData.movie || globalData.movie.length === 0) {
     return (
       <div className="page-container">
         <h2 className="page-title">Movies</h2>
         <div className="empty-state">
           <i className="fas fa-film"></i>
-          <p>No movies available. Please check your internet connection.</p>
+          <p>{error || 'No movies available. Please check your internet connection.'}</p>
           <button 
             className="retry-btn"
-            onClick={() => loadData()}
+            onClick={() => refreshData()}
           >
-            Retry
+            <i className="fas fa-sync-alt"></i> Retry
           </button>
         </div>
       </div>
@@ -55,6 +48,13 @@ const MoviesPage = ({ onMovieClick }) => {
       <div className="page-header">
         <h2 className="page-title">Movies</h2>
         <span className="movie-count">{movieCount} movies</span>
+        <button 
+          className="refresh-btn-small"
+          onClick={() => refreshData()}
+          title="Refresh movies"
+        >
+          <i className="fas fa-sync-alt"></i>
+        </button>
       </div>
       <div className="category-grid">
         {globalData.movie.map((category, index) => (
