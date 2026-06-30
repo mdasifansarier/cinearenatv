@@ -45,7 +45,7 @@ const VideoModal = ({ isOpen, movie, onClose }) => {
         (m.m3u8 || m.mpdLink || m.link) !== currentLink
       );
       const shuffled = filtered.sort(() => Math.random() - 0.5);
-      setSuggestedMovies(shuffled.slice(0, 12));
+      setSuggestedMovies(shuffled.slice(0, 9));
     }
   }, [currentMovie, globalData]);
 
@@ -108,7 +108,7 @@ const VideoModal = ({ isOpen, movie, onClose }) => {
             <span>🔥 Watch Next</span>
           </div>
           <div className="suggested-grid">
-            {suggestedMovies.slice(0, 9).map((item, index) => (
+            {suggestedMovies.map((item, index) => (
               <div 
                 key={item.m3u8 || item.mpdLink || index}
                 className="suggested-item"
