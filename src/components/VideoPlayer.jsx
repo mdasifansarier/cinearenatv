@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { usePlayer, PLAYER_TYPES } from '../contexts/PlayerContext';
 import PlayerSelector from './PlayerSelector';
+import { showToast } from './Toast';
 
 const VideoPlayer = ({ movie }) => {
   const { selectedPlayer, setPlayer } = usePlayer();
@@ -9,6 +10,7 @@ const VideoPlayer = ({ movie }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [playerError, setPlayerError] = useState(null);
   const isMounted = useRef(true);
+  const initRef = useRef(false);
 
   useEffect(() => {
     return () => {
@@ -53,6 +55,7 @@ const VideoPlayer = ({ movie }) => {
     }
     setIsLoading(true);
     setPlayerError(null);
+    initRef.current = false;
   };
 
   const loadScript = (src) => {
@@ -92,6 +95,11 @@ const VideoPlayer = ({ movie }) => {
       setIsLoading(false);
       return;
     }
+
+    if (initRef.current) {
+      return;
+    }
+    initRef.current = true;
 
     cleanup();
 
@@ -309,16 +317,6 @@ const VideoPlayer = ({ movie }) => {
             retryParameters: { timeout: 8000, maxAttempts: 3 }
           }
         });
-      } else {
-        // Default streaming config
-        player.configure({
-          streaming: {
-            lowLatencyMode: true,
-            bufferingGoal: 15,
-            rebufferingGoal: 2,
-            bufferBehind: 15
-          }
-        });
       }
 
       // Setup UI overlay
@@ -410,7 +408,7 @@ const VideoPlayer = ({ movie }) => {
         preload: 'auto',
         sources: [{
           src: source.url,
-          type: source.type === 'mpd' ? 'application/dash+xml' : 'application/x-mpegURL'
+          type: 'application/x-mpegURL'
         }]
       });
 
