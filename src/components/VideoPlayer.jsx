@@ -12,6 +12,7 @@ const VideoPlayer = ({ movie }) => {
   const [playerError, setPlayerError] = useState(null);
   const [isReady, setIsReady] = useState(false);
   const isMounted = useRef(true);
+  const initRef = useRef(false);
 
   useEffect(() => {
     return () => {
@@ -28,37 +29,55 @@ const VideoPlayer = ({ movie }) => {
 
   const source = getSource();
 
+  // Cleanup function
+  const cleanup = () => {
+    if (playerRef.current) {
+      try {
+        // If it's a video element
+        if (playerRef.current.pause) {
+          playerRef.current.pause();
+          playerRef.current.src = '';
+          playerRef.current.load();
+        }
+        // If it's a HLS instance
+        if (playerRef.current.destroy) {
+          playerRef.current.destroy();
+        }
+      } catch (e) {}
+      playerRef.current = null;
+    }
+    if (containerRef.current) {
+      containerRef.current.innerHTML = '';
+    }
+    setIsLoading(true);
+    setPlayerError(null);
+    setIsReady(false);
+    initRef.current = false;
+  };
+
   useEffect(() => {
     if (!movie || !containerRef.current || !source) {
       setIsLoading(false);
       return;
     }
 
-    // Clean up any existing player
-    const cleanup = () => {
-      if (playerRef.current) {
-        try {
-          if (typeof playerRef.current.destroy === 'function') {
-            playerRef.current.destroy();
-          } else if (typeof playerRef.current.dispose === 'function') {
-            playerRef.current.dispose();
-          }
-        } catch (e) {}
-        playerRef.current = null;
-      }
-      if (containerRef.current) {
-        containerRef.current.innerHTML = '';
-      }
-      setIsLoading(true);
-      setPlayerError(null);
-      setIsReady(false);
-    };
+    // Prevent double initialization
+    if (initRef.current) {
+      return;
+    }
+    initRef.current = true;
 
+    // Clean up any existing player
     cleanup();
 
     // Simple video player - most reliable
     const createSimplePlayer = () => {
       try {
+        // Clear container first
+        if (containerRef.current) {
+          containerRef.current.innerHTML = '';
+        }
+
         const videoEl = document.createElement('video');
         videoEl.className = 'w-full h-full';
         videoEl.setAttribute('controls', 'true');
@@ -96,6 +115,7 @@ const VideoPlayer = ({ movie }) => {
           }
         });
 
+        // Append to container
         containerRef.current.appendChild(videoEl);
         playerRef.current = videoEl;
 
@@ -119,6 +139,11 @@ const VideoPlayer = ({ movie }) => {
     // Try HLS.js for HLS streams
     const createHlsPlayer = async () => {
       try {
+        // Clear container first
+        if (containerRef.current) {
+          containerRef.current.innerHTML = '';
+        }
+
         // Load HLS.js dynamically
         let Hls;
         try {
@@ -207,14 +232,30 @@ const VideoPlayer = ({ movie }) => {
     initializePlayer();
 
     return () => {
-      if (playerRef.current) {
-        try {
-          if (playerRef.current.hls) {
-            playerRef.current.hls.destroy();
-          }
-        } catch (e) {}
-      }
       cleanup();
+    };
+  }, [movie, source]);
+
+  // Handle player change event
+  useEffect(() => {
+    const handlePlayerChange = () => {
+      cleanup();
+      initRef.current = false;
+      if (movie && source) {
+        const initializePlayer = async () => {
+          if (source.type === 'hls') {
+            await createHlsPlayer();
+          } else {
+            createSimplePlayer();
+          }
+        };
+        initializePlayer();
+      }
+    };
+
+    window.addEventListener('playerChanged', handlePlayerChange);
+    return () => {
+      window.removeEventListener('playerChanged', handlePlayerChange);
     };
   }, [movie, source]);
 
@@ -242,7 +283,8 @@ const VideoPlayer = ({ movie }) => {
             onClick={() => {
               setPlayerError(null);
               setIsLoading(true);
-              // Reload the component
+              cleanup();
+              initRef.current = false;
               window.dispatchEvent(new CustomEvent('playerChanged'));
             }}
           >
