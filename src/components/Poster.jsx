@@ -56,6 +56,24 @@ const Poster = ({ movie, isFavorite, onFavoriteToggle, onClick }) => {
     return '';
   };
 
+  // Get quality based on stream or premium status
+  const getQuality = () => {
+    // If premium is true, show HD, else show SD
+    if (movie.premium === true) {
+      return 'HD';
+    }
+    // If quality is explicitly set
+    if (movie.quality) {
+      return movie.quality;
+    }
+    // Default to SD
+    return 'SD';
+  };
+
+  const quality = getQuality();
+  const isHD = quality === 'HD' || quality === 'FHD' || quality === '4K';
+  const qualityColor = isHD ? '#22c55e' : '#60a5fa';
+
   return (
     <div 
       className="poster"
@@ -67,11 +85,12 @@ const Poster = ({ movie, isFavorite, onFavoriteToggle, onClick }) => {
       onClick={handleClick}
     >
       <div className="poster-image-wrapper">
-        {movie.premium && (
-          <span className="premium-badge">
-            <i className="fas fa-crown"></i> VIP
-          </span>
-        )}
+        {/* Quality Badge - Replaces premium badge */}
+        <span className="quality-badge" style={{ backgroundColor: qualityColor }}>
+          <i className={`fas ${isHD ? 'fa-hdmi' : 'fa-video'}`}></i>
+          {quality}
+        </span>
+        
         {isFavorite && (
           <span className="fav-heart-badge">
             <i className="fas fa-heart"></i>
