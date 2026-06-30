@@ -8,8 +8,8 @@ const PlayerSelector = () => {
   const dropdownRef = useRef(null);
 
   const playerOptions = [
-    { value: PLAYER_TYPES.PLYR, label: 'Plyr', icon: 'fa-video' },
     { value: PLAYER_TYPES.SHAKA, label: 'Shaka', icon: 'fa-film' },
+    { value: PLAYER_TYPES.PLYR, label: 'Plyr', icon: 'fa-video' },
     { value: PLAYER_TYPES.CLAPPR, label: 'Clappr', icon: 'fa-tv' }
   ];
 
