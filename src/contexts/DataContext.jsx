@@ -5,7 +5,7 @@ const DataContext = createContext();
 
 // External JSON URLs - Replace with your actual URLs
 const DATA_URLS = {
-  movies: 'https://cinearena-api.mdasifansarier-com.workers.dev/movies',
+  movies: '/data/movies.json',
   livetv: '/data/livetv.json',
   sports: '/data/sports.json',
   adult: '/data/adult.json'
