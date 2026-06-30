@@ -25,7 +25,6 @@ const VideoPlayer = ({ movie }) => {
 
   const videoUrl = getSource();
 
-  // Cleanup function
   const cleanup = () => {
     if (containerRef.current) {
       containerRef.current.innerHTML = '';
@@ -34,10 +33,8 @@ const VideoPlayer = ({ movie }) => {
     setPlayerError(null);
   };
 
-  // Load script helper
   const loadScript = (src) => {
     return new Promise((resolve, reject) => {
-      // Check if script already exists
       const existing = document.querySelector(`script[src="${src}"]`);
       if (existing) {
         resolve();
@@ -101,16 +98,130 @@ const VideoPlayer = ({ movie }) => {
     };
   }, [videoUrl, selectedPlayer]);
 
+  // ============ PLYR PLAYER WITH QUALITY SELECTOR ============
+  const initPlyr = async () => {
+    try {
+      await loadCSS('https://cdn.plyr.io/3.7.8/plyr.css');
+      await loadScript('https://cdn.plyr.io/3.7.8/plyr.polyfilled.js');
+      await loadScript('https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js');
+
+      await new Promise(resolve => {
+        const checkPlyr = () => {
+          if (window.Plyr) {
+            resolve();
+          } else {
+            setTimeout(checkPlyr, 100);
+          }
+        };
+        checkPlyr();
+      });
+
+      const Plyr = window.Plyr;
+      const Hls = window.Hls;
+
+      const videoEl = document.createElement('video');
+      videoEl.className = 'w-full h-full';
+      videoEl.setAttribute('autoplay', 'yes');
+      videoEl.setAttribute('controls', 'true');
+      videoEl.setAttribute('playsinline', 'true');
+      videoEl.style.width = '100%';
+      videoEl.style.height = '100%';
+      videoEl.style.objectFit = 'contain';
+      videoEl.style.backgroundColor = '#000';
+      containerRef.current.appendChild(videoEl);
+
+      if (Hls && Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(videoUrl);
+        hls.attachMedia(videoEl);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          // Get available qualities
+          const availableQualities = hls.levels
+            .map(level => level.height)
+            .filter(Boolean)
+            .sort((a, b) => b - a);
+          
+          const defaultQuality = availableQualities.includes(1080) ? 1080 : (availableQualities[0] || 360);
+
+          const player = new Plyr(videoEl, {
+            controls: [
+              'play-large',
+              'play',
+              'progress',
+              'current-time',
+              'duration',
+              'mute',
+              'volume',
+              'settings',
+              'fullscreen'
+            ],
+            quality: {
+              default: defaultQuality,
+              options: availableQualities,
+              forced: true,
+              onChange: (quality) => {
+                hls.levels.forEach((level, levelIndex) => {
+                  if (level.height === quality) {
+                    hls.currentLevel = levelIndex;
+                  }
+                });
+              }
+            },
+            settings: ['quality', 'speed']
+          });
+          
+          if (isMounted.current) {
+            setIsLoading(false);
+          }
+          
+          videoEl.muted = true;
+          videoEl.play().then(() => {
+            videoEl.muted = false;
+          }).catch(() => {});
+        });
+
+        hls.on(Hls.Events.ERROR, (event, data) => {
+          if (data.fatal) {
+            console.error('HLS error:', data);
+            if (isMounted.current) {
+              setPlayerError('Stream error');
+              setIsLoading(false);
+            }
+          }
+        });
+
+      } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+        videoEl.src = videoUrl;
+        const player = new Plyr(videoEl, {
+          controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen'],
+          settings: ['quality', 'speed']
+        });
+        if (isMounted.current) {
+          setIsLoading(false);
+        }
+        videoEl.muted = true;
+        videoEl.play().then(() => {
+          videoEl.muted = false;
+        }).catch(() => {});
+      } else {
+        throw new Error('HLS not supported');
+      }
+
+    } catch (error) {
+      console.error('Plyr init error:', error);
+      throw error;
+    }
+  };
+
   // ============ CLAPPR PLAYER ============
   const initClappr = async () => {
     try {
-      // Load Video.js
       await loadCSS('https://vjs.zencdn.net/8.10.0/video-js.min.css');
       await loadScript('https://vjs.zencdn.net/8.10.0/video.min.js');
       await loadScript('https://cdn.jsdelivr.net/npm/hls.js@latest');
       await loadScript('https://cdn.jsdelivr.net/npm/videojs-contrib-hls@5.15.0/dist/videojs-contrib-hls.min.js');
 
-      // Wait for Video.js to be ready
       await new Promise(resolve => {
         const checkVideoJs = () => {
           if (window.videojs) {
@@ -124,7 +235,6 @@ const VideoPlayer = ({ movie }) => {
 
       const videojs = window.videojs;
 
-      // Create video element
       const videoEl = document.createElement('video');
       videoEl.id = 'clapper-player';
       videoEl.className = 'video-js vjs-big-play-centered vjs-16-9';
@@ -135,7 +245,6 @@ const VideoPlayer = ({ movie }) => {
       videoEl.style.height = '100%';
       containerRef.current.appendChild(videoEl);
 
-      // Initialize player
       const player = videojs('clapper-player', {
         autoplay: true,
         controls: true,
@@ -202,7 +311,6 @@ const VideoPlayer = ({ movie }) => {
 
       const player = new shaka.Player(videoEl);
       
-      // DRM config if needed
       if (movie?.keyId && movie?.key) {
         player.configure({
           drm: {
@@ -213,7 +321,6 @@ const VideoPlayer = ({ movie }) => {
         });
       }
 
-      // UI overlay
       const ui = new shaka.ui.Overlay(player, containerRef.current, videoEl);
       ui.configure({
         controlPanelElements: ['play_pause', 'mute', 'volume', 'time_and_duration', 'spacer', 'quality', 'fullscreen']
@@ -232,90 +339,6 @@ const VideoPlayer = ({ movie }) => {
 
     } catch (error) {
       console.error('Shaka init error:', error);
-      throw error;
-    }
-  };
-
-  // ============ PLYR PLAYER ============
-  const initPlyr = async () => {
-    try {
-      await loadCSS('https://cdn.plyr.io/3.7.8/plyr.css');
-      await loadScript('https://cdn.plyr.io/3.7.8/plyr.polyfilled.js');
-      await loadScript('https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js');
-
-      await new Promise(resolve => {
-        const checkPlyr = () => {
-          if (window.Plyr) {
-            resolve();
-          } else {
-            setTimeout(checkPlyr, 100);
-          }
-        };
-        checkPlyr();
-      });
-
-      const Plyr = window.Plyr;
-      const Hls = window.Hls;
-
-      const videoEl = document.createElement('video');
-      videoEl.className = 'w-full h-full';
-      videoEl.setAttribute('autoplay', 'yes');
-      videoEl.setAttribute('controls', 'true');
-      videoEl.setAttribute('playsinline', 'true');
-      videoEl.style.width = '100%';
-      videoEl.style.height = '100%';
-      videoEl.style.objectFit = 'contain';
-      videoEl.style.backgroundColor = '#000';
-      containerRef.current.appendChild(videoEl);
-
-      if (Hls && Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(videoUrl);
-        hls.attachMedia(videoEl);
-
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          const player = new Plyr(videoEl, {
-            controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen']
-          });
-          
-          if (isMounted.current) {
-            setIsLoading(false);
-          }
-          
-          videoEl.muted = true;
-          videoEl.play().then(() => {
-            videoEl.muted = false;
-          }).catch(() => {});
-        });
-
-        hls.on(Hls.Events.ERROR, (event, data) => {
-          if (data.fatal) {
-            console.error('HLS error:', data);
-            if (isMounted.current) {
-              setPlayerError('Stream error');
-              setIsLoading(false);
-            }
-          }
-        });
-
-      } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
-        videoEl.src = videoUrl;
-        const player = new Plyr(videoEl, {
-          controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen']
-        });
-        if (isMounted.current) {
-          setIsLoading(false);
-        }
-        videoEl.muted = true;
-        videoEl.play().then(() => {
-          videoEl.muted = false;
-        }).catch(() => {});
-      } else {
-        throw new Error('HLS not supported');
-      }
-
-    } catch (error) {
-      console.error('Plyr init error:', error);
       throw error;
     }
   };
