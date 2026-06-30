@@ -28,11 +28,8 @@ const PlayerSelector = () => {
   const handleSelect = (playerType) => {
     setPlayer(playerType);
     setIsOpen(false);
-    window.dispatchEvent(new CustomEvent('playerChanged', { detail: { player: playerType } }));
-    const showToast = (msg) => {
-      window.dispatchEvent(new CustomEvent('showToast', { detail: { message: msg } }));
-    };
-    showToast(`🔄 Switched to ${playerType.toUpperCase()} Player`);
+    // Reload the page to apply new player
+    window.location.reload();
   };
 
   return (
