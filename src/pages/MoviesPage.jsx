@@ -19,7 +19,7 @@ const MoviesPage = ({ onMovieClick }) => {
       </div>
     );
   }
-
+ 
   return (
     <div className="page-container">
       <h2 className="page-title">Movies</h2>
