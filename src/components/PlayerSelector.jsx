@@ -4,7 +4,7 @@ import { usePlayer, PLAYER_TYPES } from '../contexts/PlayerContext';
 
 const PlayerSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { selectedPlayer, setPlayer } = usePlayer();
+  const { selectedPlayer, changePlayer } = usePlayer(); // ✅ Changed setPlayer → changePlayer
   const dropdownRef = useRef(null);
 
   const playerOptions = [
@@ -26,7 +26,7 @@ const PlayerSelector = () => {
   }, []);
 
   const handleSelect = (playerType) => {
-    setPlayer(playerType);
+    changePlayer(playerType); // ✅ Changed setPlayer → changePlayer
     setIsOpen(false);
     window.dispatchEvent(new CustomEvent('playerChanged', { detail: { player: playerType } }));
     const showToast = (msg) => {
